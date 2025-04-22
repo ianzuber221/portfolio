@@ -1,8 +1,16 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar"; // You'll create this
 
+// Components
+import Navbar from "@/components/Navbar";
+import RecruiterModal from "@/components/RecruiterModal";
+import ScriptedBackground from "@/components/ScriptedBackground"; // ✅ New client-side wrapper
+
+// Context
+import { RecruiterProvider } from "@/context/RecruiterContext";
+
+// Fonts
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -25,9 +33,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body className="bg-zinc-100 text-zinc-900 antialiased min-h-screen">
-        <Navbar />
-        <main className="p-6 max-w-5xl mx-auto">{children}</main>
+      <body>
+        <ScriptedBackground>
+          <RecruiterProvider>
+            <RecruiterModal />
+              <Navbar />
+              <main className="p-6 max-w-5xl mx-auto">{children}</main>
+          </RecruiterProvider>
+        </ScriptedBackground>
       </body>
     </html>
   );
