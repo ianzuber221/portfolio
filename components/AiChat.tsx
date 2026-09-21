@@ -101,14 +101,14 @@ export function AiChat() {
             value={hydrated ? company : ""}
             onChange={(e) => update({ company: e.target.value })}
             placeholder="Your company (optional)"
-            className="rounded-lg border border-[rgb(var(--border)/0.18)] bg-[rgb(var(--background))]/40 px-3.5 py-2.5 text-sm outline-none transition focus:border-[rgb(var(--ring)/0.6)]"
+            className="rounded-lg border border-[rgb(var(--border)/0.18)] bg-[rgb(var(--background))]/40 px-3.5 py-2.5 text-base sm:text-sm outline-none transition focus:border-[rgb(var(--ring)/0.6)]"
           />
           <input
             aria-label="Role focus"
             value={hydrated ? focus : ""}
             onChange={(e) => update({ focus: e.target.value })}
             placeholder="Role focus (e.g. AI infrastructure)"
-            className="rounded-lg border border-[rgb(var(--border)/0.18)] bg-[rgb(var(--background))]/40 px-3.5 py-2.5 text-sm outline-none transition focus:border-[rgb(var(--ring)/0.6)]"
+            className="rounded-lg border border-[rgb(var(--border)/0.18)] bg-[rgb(var(--background))]/40 px-3.5 py-2.5 text-base sm:text-sm outline-none transition focus:border-[rgb(var(--ring)/0.6)]"
           />
         </div>
 
@@ -186,7 +186,7 @@ export function AiChat() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask about experience, projects, availability…"
-            className="flex-1 rounded-lg border border-[rgb(var(--border)/0.18)] bg-[rgb(var(--background))]/40 px-3.5 py-2.5 text-sm outline-none transition focus:border-[rgb(var(--ring)/0.6)]"
+            className="flex-1 rounded-lg border border-[rgb(var(--border)/0.18)] bg-[rgb(var(--background))]/40 px-3.5 py-2.5 text-base sm:text-sm outline-none transition focus:border-[rgb(var(--ring)/0.6)]"
           />
           <button
             type="submit"

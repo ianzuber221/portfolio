@@ -24,9 +24,11 @@ export default function ResumePage() {
       </div>
 
       {/* Paper */}
-      <article className="resume-paper mx-auto max-w-3xl bg-white p-8 text-slate-900 shadow-sm sm:p-12 print:max-w-none print:p-0 print:shadow-none">
+      <article className="resume-paper mx-3 max-w-3xl rounded-xl bg-white p-6 text-slate-900 shadow-sm sm:mx-auto sm:p-12 print:mx-0 print:max-w-none print:rounded-none print:p-0 print:shadow-none">
         <header className="border-b border-slate-200 pb-5">
-          <h1 className="text-3xl font-bold tracking-tight">{profile.name}</h1>
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+            {profile.name}
+          </h1>
           <p className="mt-1 text-lg text-brand-700">{profile.role}</p>
           <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-600">
             <span>{profile.location}</span>
