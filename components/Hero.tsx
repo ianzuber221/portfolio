@@ -16,64 +16,123 @@ export function Hero() {
           backgroundSize: "56px 56px",
         }}
       />
-      <div className="container-page pb-16 pt-16 sm:pb-20 sm:pt-24">
-        <span className="inline-flex animate-fade-in-up items-center gap-2 rounded-full border border-[rgb(var(--border)/0.18)] bg-[rgb(var(--surface))]/50 px-3 py-1 text-xs font-medium">
-          <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+      <div className="container-page grid items-center gap-12 pb-16 pt-16 sm:pb-20 sm:pt-24 lg:grid-cols-[1.05fr_0.95fr]">
+        {/* Left: intro */}
+        <div>
+          <span className="inline-flex animate-fade-in-up items-center gap-2 rounded-full border border-[rgb(var(--border)/0.18)] bg-[rgb(var(--surface))]/50 px-3 py-1 text-xs font-medium">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+            </span>
+            {profile.availability} · {profile.location}
           </span>
-          {profile.availability} · {profile.location}
-        </span>
 
-        <h1 className="mt-6 max-w-3xl animate-fade-in-up text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl">
-          Hi, I&apos;m {profile.name}.
-          <span className="mt-1 block text-gradient bg-[length:200%_auto] animate-gradient-pan">
-            {profile.role}.
-          </span>
-        </h1>
+          <h1 className="mt-6 animate-fade-in-up text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl">
+            Hi, I&apos;m {profile.name}.
+            <span className="mt-1 block text-gradient bg-[length:200%_auto] animate-gradient-pan">
+              {profile.role}.
+            </span>
+          </h1>
 
-        <p className="mt-6 max-w-2xl animate-fade-in-up text-lg leading-relaxed muted">
-          {profile.tagline}
-        </p>
+          <p className="mt-6 max-w-xl animate-fade-in-up text-lg leading-relaxed muted">
+            {profile.tagline}
+          </p>
 
-        <div className="mt-8 flex animate-fade-in-up flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-          <Link href="#ai" className="btn-primary w-full sm:w-auto">
-            Chat with my AI
-            <ArrowUpRightIcon width={16} height={16} />
-          </Link>
-          <Link href="#work" className="btn-ghost w-full sm:w-auto">
-            View my work
-          </Link>
-          {email && (
-            <Link href={email.href} className="btn-ghost w-full sm:w-auto">
-              Get in touch
+          <div className="mt-8 flex animate-fade-in-up flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+            <Link href="#ai" className="btn-primary w-full sm:w-auto">
+              Chat with my AI
+              <ArrowUpRightIcon width={16} height={16} />
             </Link>
-          )}
-          <div className="flex items-center justify-center gap-1 sm:ml-1">
-            {profile.socials.map((social) => (
-              <Link
-                key={social.kind}
-                href={social.href}
-                aria-label={social.label}
-                title={social.label}
-                className="grid h-9 w-9 place-items-center rounded-full border border-[rgb(var(--border)/0.18)] text-[rgb(var(--muted))] transition hover:text-[rgb(var(--ring))] hover:border-[rgb(var(--ring)/0.5)]"
-              >
-                <SocialIcon kind={social.kind} width={17} height={17} />
+            <Link href="#work" className="btn-ghost w-full sm:w-auto">
+              View my work
+            </Link>
+            {email && (
+              <Link href={email.href} className="btn-ghost w-full sm:w-auto">
+                Get in touch
               </Link>
-            ))}
+            )}
+            <div className="flex items-center justify-center gap-1 sm:ml-1">
+              {profile.socials.map((social) => (
+                <Link
+                  key={social.kind}
+                  href={social.href}
+                  aria-label={social.label}
+                  title={social.label}
+                  className="grid h-9 w-9 place-items-center rounded-full border border-[rgb(var(--border)/0.18)] text-[rgb(var(--muted))] transition hover:text-[rgb(var(--ring))] hover:border-[rgb(var(--ring)/0.5)]"
+                >
+                  <SocialIcon kind={social.kind} width={17} height={17} />
+                </Link>
+              ))}
+            </div>
           </div>
+
+          <dl className="mt-12 grid max-w-lg animate-fade-in-up grid-cols-3 gap-4 border-t border-[rgb(var(--border)/0.1)] pt-6">
+            {profile.stats.map((stat) => (
+              <div key={stat.label}>
+                <dt className="text-xs muted">{stat.label}</dt>
+                <dd className="mt-1 text-lg font-semibold tracking-tight">
+                  {stat.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
 
-        <dl className="mt-12 grid max-w-lg animate-fade-in-up grid-cols-3 gap-4 border-t border-[rgb(var(--border)/0.1)] pt-6">
-          {profile.stats.map((stat) => (
-            <div key={stat.label}>
-              <dt className="text-xs muted">{stat.label}</dt>
-              <dd className="mt-1 text-lg font-semibold tracking-tight">
-                {stat.value}
-              </dd>
+        {/* Right: AI assistant preview (large screens only) */}
+        <div className="relative hidden animate-fade-in-up lg:block">
+          <div
+            aria-hidden="true"
+            className="absolute -inset-6 -z-10 rounded-[2rem] bg-[rgb(var(--ring)/0.12)] blur-3xl"
+          />
+          <div className="card p-6">
+            <div className="flex items-center gap-2 border-b border-[rgb(var(--border)/0.1)] pb-3">
+              <span className="grid h-7 w-7 place-items-center rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-[10px] font-bold text-white">
+                AI
+              </span>
+              <span className="text-sm font-medium">Ask my AI</span>
+              <span className="ml-auto inline-flex items-center gap-1.5 text-xs muted">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                online
+              </span>
             </div>
-          ))}
-        </dl>
+
+            <div className="mt-4 space-y-3">
+              <div className="flex justify-end">
+                <div className="max-w-[80%] rounded-2xl bg-brand-600 px-4 py-2.5 text-sm text-white">
+                  Why should we hire Ian?
+                </div>
+              </div>
+              <div className="flex gap-2.5">
+                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-[10px] font-bold text-white">
+                  AI
+                </span>
+                <div className="max-w-[85%] rounded-2xl border border-[rgb(var(--border)/0.12)] bg-[rgb(var(--surface))]/70 px-4 py-2.5 text-sm leading-relaxed">
+                  He&apos;s an AI Frontend Engineer at BNY — Angular apps plus AI
+                  agents, skills, workflows &amp; MCP servers. He previously led
+                  Bayer&apos;s PassLink Cloud Web App.
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 flex flex-wrap gap-2">
+              {["Bayer PassLink", "AI agents & MCP", "Open to relocating?"].map(
+                (chip) => (
+                  <span key={chip} className="chip">
+                    {chip}
+                  </span>
+                ),
+              )}
+            </div>
+
+            <Link
+              href="#ai"
+              className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-[rgb(var(--ring))] transition hover:gap-2.5"
+            >
+              Chat with the assistant
+              <ArrowUpRightIcon width={15} height={15} />
+            </Link>
+          </div>
+        </div>
       </div>
     </section>
   );
