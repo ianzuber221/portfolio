@@ -2,21 +2,23 @@ import { profile } from "@/lib/profile";
 
 export function Skills() {
   return (
-    <section className="mx-auto max-w-5xl px-6 py-6">
-      <div className="glass-card p-6">
-        <h2 className="font-mono text-xs uppercase tracking-widest muted">
-          Toolbox
-        </h2>
-        <ul className="mt-4 flex flex-wrap gap-2.5">
-          {profile.skills.map((skill) => (
-            <li
-              key={skill}
-              className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium dark:bg-white/10"
-            >
-              {skill}
-            </li>
+    <section id="skills" className="container-page py-8">
+      <div className="card p-6 sm:p-8">
+        <p className="eyebrow">Toolbox</p>
+        <div className="mt-5 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {profile.skillGroups.map((group) => (
+            <div key={group.label}>
+              <h3 className="text-sm font-semibold">{group.label}</h3>
+              <ul className="mt-3 flex flex-wrap gap-2">
+                {group.items.map((item) => (
+                  <li key={item} className="chip">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
     </section>
   );

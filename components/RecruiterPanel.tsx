@@ -3,6 +3,12 @@
 import { useEffect, useState } from "react";
 import { useRecruiter } from "@/context/RecruiterContext";
 
+const EXAMPLES = [
+  { company: "Vercel", focus: "AI infrastructure" },
+  { company: "Linear", focus: "polished product UI" },
+  { company: "Stripe", focus: "reliable backend systems" },
+];
+
 export function RecruiterPanel() {
   const { session, hydrated, update, reset } = useRecruiter();
   const [company, setCompany] = useState("");
@@ -10,13 +16,11 @@ export function RecruiterPanel() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Once the persisted session hydrates from localStorage, seed the local
-  // inputs so a returning visitor sees their previous company/focus.
+  // Seed the inputs from a persisted session once it hydrates.
   useEffect(() => {
     if (!hydrated) return;
     setCompany((prev) => (prev === "" ? session.company : prev));
     setFocus((prev) => (prev === "" ? session.focus : prev));
-    // Only re-run when hydration completes, not on every keystroke.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hydrated]);
 
@@ -45,40 +49,65 @@ export function RecruiterPanel() {
     }
   }
 
+  function applyExample(example: (typeof EXAMPLES)[number]) {
+    setCompany(example.company);
+    setFocus(example.focus);
+  }
+
   return (
-    <section id="about" className="mx-auto max-w-5xl px-6 py-10">
-      <div className="glass-card p-6 sm:p-8">
-        <div className="flex items-center gap-2">
-          <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-brand-500" />
-          <h2 className="section-title">Recruiter mode</h2>
-        </div>
-        <p className="mt-2 max-w-2xl muted">
-          Tell me who you are and what you&apos;re hiring for. I&apos;ll tailor a
-          quick pitch — powered by OpenAI when configured, with a curated
-          fallback otherwise. Your session is remembered on this device.
+    <section id="recruiter" className="container-page py-8">
+      <div className="card relative overflow-hidden p-6 sm:p-8">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[rgb(var(--ring)/0.14)] blur-3xl"
+        />
+        <p className="eyebrow">For recruiters</p>
+        <h2 className="section-title mt-2">Personalize this page for your role</h2>
+        <p className="mt-3 max-w-2xl muted">
+          Tell me who you&apos;re hiring for and I&apos;ll tailor a quick pitch.
+          It&apos;s generated with OpenAI when a key is configured, and a curated
+          fallback otherwise. Your inputs stay on this device.
         </p>
+
+        <div className="mt-5 flex flex-wrap items-center gap-2">
+          <span className="text-xs muted">Try:</span>
+          {EXAMPLES.map((ex) => (
+            <button
+              key={ex.company}
+              type="button"
+              onClick={() => applyExample(ex)}
+              className="chip transition hover:border-[rgb(var(--ring)/0.5)] hover:text-[rgb(var(--ring))]"
+            >
+              {ex.company}
+            </button>
+          ))}
+        </div>
 
         <form
           onSubmit={personalize}
-          className="mt-6 grid gap-3 sm:grid-cols-[1fr_1fr_auto]"
+          className="mt-5 grid gap-3 sm:grid-cols-[1fr_1fr_auto]"
         >
+          <label className="sr-only" htmlFor="rc-company">
+            Company
+          </label>
           <input
+            id="rc-company"
             value={company}
             onChange={(e) => setCompany(e.target.value)}
             placeholder="Company (e.g. Vercel)"
-            className="rounded-lg border border-slate-300 bg-transparent px-3 py-2 text-sm outline-none transition focus:border-brand-500 dark:border-white/15"
+            className="rounded-lg border border-[rgb(var(--border)/0.18)] bg-[rgb(var(--background))]/40 px-3.5 py-2.5 text-sm outline-none transition focus:border-[rgb(var(--ring)/0.6)]"
           />
+          <label className="sr-only" htmlFor="rc-focus">
+            Focus area
+          </label>
           <input
+            id="rc-focus"
             value={focus}
             onChange={(e) => setFocus(e.target.value)}
             placeholder="Focus area (e.g. AI infrastructure)"
-            className="rounded-lg border border-slate-300 bg-transparent px-3 py-2 text-sm outline-none transition focus:border-brand-500 dark:border-white/15"
+            className="rounded-lg border border-[rgb(var(--border)/0.18)] bg-[rgb(var(--background))]/40 px-3.5 py-2.5 text-sm outline-none transition focus:border-[rgb(var(--ring)/0.6)]"
           />
-          <button
-            type="submit"
-            disabled={loading}
-            className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-500 disabled:opacity-60"
-          >
+          <button type="submit" disabled={loading} className="btn-primary disabled:opacity-60">
             {loading ? "Thinking…" : "Personalize"}
           </button>
         </form>
@@ -86,13 +115,14 @@ export function RecruiterPanel() {
         {error && <p className="mt-3 text-sm text-red-500">{error}</p>}
 
         {session.summary && (
-          <div className="mt-6 rounded-xl border border-brand-200/60 bg-brand-50/60 p-4 text-sm dark:border-brand-500/20 dark:bg-brand-500/10">
+          <div className="mt-6 rounded-xl border border-[rgb(var(--ring)/0.25)] bg-[rgb(var(--ring)/0.08)] p-5">
             <p className="leading-relaxed">{session.summary}</p>
-            <div className="mt-3 flex items-center justify-between text-xs muted">
-              <span>
+            <div className="mt-4 flex items-center justify-between gap-3 text-xs muted">
+              <span className="inline-flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-[rgb(var(--ring))]" />
                 {session.summarySource === "openai"
                   ? "Generated with OpenAI"
-                  : "Curated fallback (add OPENAI_API_KEY for live generation)"}
+                  : "Curated fallback — set OPENAI_API_KEY for live generation"}
               </span>
               <button
                 type="button"
@@ -101,9 +131,9 @@ export function RecruiterPanel() {
                   setCompany("");
                   setFocus("");
                 }}
-                className="underline transition hover:text-brand-500"
+                className="underline transition hover:text-[rgb(var(--foreground))]"
               >
-                Clear session
+                Clear
               </button>
             </div>
           </div>

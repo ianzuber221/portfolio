@@ -1,24 +1,24 @@
 export type Project = {
   slug: string;
   name: string;
-  description: string;
   summary: string;
+  impact: string;
   tags: string[];
   repo?: string;
   demo?: string;
   featured?: boolean;
 };
 
-// Curated project data. When an OpenAI key is configured, the summaries are
-// regenerated on demand and tailored to the visiting recruiter's focus area.
+// Curated project data. When an OpenAI key is configured, the recruiter
+// summaries elsewhere on the page are regenerated on demand; project copy
+// here stays hand-written for accuracy.
 export const projects: Project[] = [
   {
     slug: "ai-portfolio",
     name: "AI-Powered Portfolio",
-    description:
-      "This very site — a Next.js 14 portfolio that personalizes its content and theming with OpenAI.",
     summary:
-      "A self-aware developer portfolio built with the App Router, Tailwind, and TypeScript. Recruiters can tune the experience to their focus area and the site adapts its summaries in real time.",
+      "This site — a Next.js portfolio that personalizes its pitch to each recruiter using OpenAI, with a curated fallback when no key is set.",
+    impact: "Personalizes in real time",
     tags: ["Next.js", "TypeScript", "Tailwind", "OpenAI"],
     repo: "https://github.com/ianzuber221/portfolio",
     featured: true,
@@ -26,29 +26,26 @@ export const projects: Project[] = [
   {
     slug: "realtime-collab",
     name: "Realtime Collab Board",
-    description:
-      "A multiplayer whiteboard with live cursors, presence, and conflict-free syncing.",
     summary:
-      "Explores CRDTs and websocket fan-out to keep dozens of collaborators in sync with sub-100ms updates and offline recovery.",
+      "A multiplayer whiteboard with live cursors, presence, and conflict-free syncing built on CRDTs and websocket fan-out.",
+    impact: "Sub-100ms sync",
     tags: ["React", "WebSockets", "CRDT", "Node.js"],
     featured: true,
   },
   {
     slug: "semantic-search",
     name: "Semantic Docs Search",
-    description:
-      "Embeddings-based search over technical docs with cited, streaming answers.",
     summary:
-      "A retrieval-augmented search engine that chunks documentation, embeds it into a vector store, and streams grounded answers with source citations.",
+      "Retrieval-augmented search over technical docs that chunks content, embeds it into a vector store, and streams cited answers.",
+    impact: "Grounded, cited answers",
     tags: ["Python", "Embeddings", "pgvector", "FastAPI"],
   },
   {
     slug: "devops-dashboard",
     name: "Deploy Health Dashboard",
-    description:
-      "A single pane of glass for deploy status, error rates, and rollback controls.",
     summary:
-      "Aggregates CI/CD, error tracking, and uptime signals into one dashboard so on-call engineers can spot and roll back bad deploys quickly.",
+      "A single pane of glass that aggregates CI/CD, error rates, and uptime so on-call engineers can spot and roll back bad deploys fast.",
+    impact: "Faster incident response",
     tags: ["Next.js", "AWS", "Observability"],
   },
 ];

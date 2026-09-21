@@ -21,19 +21,17 @@ const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 const STORAGE_KEY = "portfolio-theme";
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("dark");
+  // The inline script in <head> has already set the correct class before
+  // paint; initialize from the DOM so state matches and there is no flash.
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof document === "undefined") return "dark";
+    return document.documentElement.classList.contains("dark")
+      ? "dark"
+      : "light";
+  });
 
   useEffect(() => {
-    const stored = window.localStorage.getItem(STORAGE_KEY) as Theme | null;
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)",
-    ).matches;
-    setTheme(stored ?? (prefersDark ? "dark" : "light"));
-  }, []);
-
-  useEffect(() => {
-    const root = document.documentElement;
-    root.classList.toggle("dark", theme === "dark");
+    document.documentElement.classList.toggle("dark", theme === "dark");
     window.localStorage.setItem(STORAGE_KEY, theme);
   }, [theme]);
 
