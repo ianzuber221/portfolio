@@ -2,7 +2,7 @@ import type { Project } from "@/lib/projects";
 import { projectOverrides } from "@/lib/projects";
 import { profile } from "@/lib/profile";
 
-type GitHubRepo = {
+export type GitHubRepo = {
   name: string;
   description: string | null;
   html_url: string;
@@ -22,7 +22,7 @@ function prettify(name: string): string {
     .trim();
 }
 
-function toProject(repo: GitHubRepo): Project {
+export function toProject(repo: GitHubRepo): Project {
   const override = projectOverrides[repo.name.toLowerCase()];
   const tags =
     override?.tags ??
@@ -45,6 +45,30 @@ function toProject(repo: GitHubRepo): Project {
     repo: repo.html_url,
     demo: repo.homepage ? repo.homepage : undefined,
   };
+}
+
+export function selectGitHubProjects(
+  repos: GitHubRepo[],
+  limit = 6,
+  username = profile.githubUsername,
+): Project[] {
+  const owner = username.toLowerCase();
+  return repos
+    .filter(
+      (r) =>
+        r &&
+        !r.fork &&
+        !r.archived &&
+        // Exclude the special profile README repo (owner/owner).
+        r.name.toLowerCase() !== owner,
+    )
+    .sort(
+      (a, b) =>
+        b.stargazers_count - a.stargazers_count ||
+        new Date(b.pushed_at).getTime() - new Date(a.pushed_at).getTime(),
+    )
+    .slice(0, limit)
+    .map(toProject);
 }
 
 /**
@@ -73,24 +97,7 @@ export async function fetchGitHubProjects(
     const repos: unknown = await res.json();
     if (!Array.isArray(repos)) return null;
 
-    const username = profile.githubUsername.toLowerCase();
-    const projects = (repos as GitHubRepo[])
-      .filter(
-        (r) =>
-          r &&
-          !r.fork &&
-          !r.archived &&
-          // Exclude the special profile README repo (owner/owner).
-          r.name.toLowerCase() !== username,
-      )
-      .sort(
-        (a, b) =>
-          b.stargazers_count - a.stargazers_count ||
-          new Date(b.pushed_at).getTime() - new Date(a.pushed_at).getTime(),
-      )
-      .slice(0, limit)
-      .map(toProject);
-
+    const projects = selectGitHubProjects(repos as GitHubRepo[], limit);
     return projects.length ? projects : null;
   } catch {
     return null;
