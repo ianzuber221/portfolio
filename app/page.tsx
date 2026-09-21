@@ -8,6 +8,7 @@ import { About } from "@/components/About";
 import { AiChat } from "@/components/AiChat";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/Reveal";
+import { MobileActionBar } from "@/components/MobileActionBar";
 
 export default function Home() {
   return (
@@ -27,6 +28,7 @@ export default function Home() {
         </Reveal>
       </main>
       <Footer />
+      <MobileActionBar />
     </>
   );
 }

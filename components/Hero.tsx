@@ -36,20 +36,20 @@ export function Hero() {
           {profile.tagline}
         </p>
 
-        <div className="mt-8 flex animate-fade-in-up flex-wrap items-center gap-3">
-          <Link href="#ai" className="btn-primary">
+        <div className="mt-8 flex animate-fade-in-up flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+          <Link href="#ai" className="btn-primary w-full sm:w-auto">
             Chat with my AI
             <ArrowUpRightIcon width={16} height={16} />
           </Link>
-          <Link href="#work" className="btn-ghost">
+          <Link href="#work" className="btn-ghost w-full sm:w-auto">
             View my work
           </Link>
           {email && (
-            <Link href={email.href} className="btn-ghost">
+            <Link href={email.href} className="btn-ghost w-full sm:w-auto">
               Get in touch
             </Link>
           )}
-          <div className="ml-1 flex items-center gap-1">
+          <div className="flex items-center justify-center gap-1 sm:ml-1">
             {profile.socials.map((social) => (
               <Link
                 key={social.kind}

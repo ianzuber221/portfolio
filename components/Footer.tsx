@@ -6,7 +6,10 @@ export function Footer() {
   const email = profile.socials.find((s) => s.kind === "email");
 
   return (
-    <footer id="contact" className="container-page py-16 sm:py-20">
+    <footer
+      id="contact"
+      className="container-page pt-16 pb-[calc(7rem+env(safe-area-inset-bottom))] sm:py-20"
+    >
       <div className="card relative overflow-hidden p-8 sm:p-12">
         <div
           aria-hidden="true"
