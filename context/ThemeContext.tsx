@@ -21,19 +21,23 @@ const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 const STORAGE_KEY = "portfolio-theme";
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  // The inline script in <head> has already set the correct class before
-  // paint; initialize from the DOM so state matches and there is no flash.
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof document === "undefined") return "dark";
-    return document.documentElement.classList.contains("dark")
-      ? "dark"
-      : "light";
-  });
+  // Use a stable value for SSR and the first client render so hydration
+  // matches. The real theme (already applied to <html> by the inline script
+  // in <head>) is read into state right after mount.
+  const [theme, setTheme] = useState<Theme>("dark");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    const isDark = document.documentElement.classList.contains("dark");
+    setTheme(isDark ? "dark" : "light");
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
     document.documentElement.classList.toggle("dark", theme === "dark");
     window.localStorage.setItem(STORAGE_KEY, theme);
-  }, [theme]);
+  }, [theme, mounted]);
 
   const toggleTheme = useCallback(() => {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
