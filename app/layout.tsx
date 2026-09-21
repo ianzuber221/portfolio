@@ -51,6 +51,30 @@ export const viewport: Viewport = {
 // Applies the persisted (or system) theme before first paint to avoid a flash.
 const themeInitScript = `(function(){try{var t=localStorage.getItem('portfolio-theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.classList.toggle('dark',d);}catch(e){document.documentElement.classList.add('dark');}})();`;
 
+// schema.org Person structured data for richer search results.
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: profile.name,
+  jobTitle: profile.role,
+  worksFor: { "@type": "Organization", name: "BNY" },
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Pittsburgh",
+    addressRegion: "PA",
+    addressCountry: "US",
+  },
+  url: siteUrl,
+  sameAs: profile.socials
+    .filter((s) => s.kind !== "email")
+    .map((s) => s.href),
+  alumniOf: profile.education.map((e) => ({
+    "@type": "EducationalOrganization",
+    name: e.school,
+  })),
+  knowsAbout: profile.skillGroups.flatMap((g) => g.items),
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -64,6 +88,10 @@ export default function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
       </head>
       <body className="min-h-screen font-sans">
         <a

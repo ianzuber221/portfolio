@@ -32,6 +32,9 @@ export function Footer() {
               <ArrowUpRightIcon width={16} height={16} />
             </Link>
           )}
+          <Link href="/resume" className="btn-ghost">
+            Résumé
+          </Link>
           {profile.socials
             .filter((s) => s.kind !== "email")
             .map((social) => (

@@ -52,6 +52,14 @@ export function Navbar() {
                 </Link>
               </li>
             ))}
+            <li>
+              <Link
+                href="/resume"
+                className="rounded-full border border-[rgb(var(--border)/0.18)] px-3 py-1.5 text-[rgb(var(--foreground))] transition hover:border-[rgb(var(--ring)/0.6)] hover:text-[rgb(var(--ring))]"
+              >
+                Résumé
+              </Link>
+            </li>
           </ul>
           <ThemeToggle />
           <button
@@ -82,6 +90,15 @@ export function Navbar() {
                 </Link>
               </li>
             ))}
+            <li>
+              <Link
+                href="/resume"
+                onClick={() => setOpen(false)}
+                className="block rounded-lg px-2 py-3 text-sm font-medium text-[rgb(var(--ring))] transition hover:bg-[rgb(var(--surface))]/60"
+              >
+                Résumé
+              </Link>
+            </li>
           </ul>
         </div>
       )}
