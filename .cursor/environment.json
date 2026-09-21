@@ -1,0 +1,10 @@
+{
+  "name": "Ian Zuber Portfolio",
+  "install": "npm install",
+  "terminals": [
+    {
+      "name": "dev",
+      "command": "npm run dev"
+    }
+  ]
+}
