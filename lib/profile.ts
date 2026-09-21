@@ -22,6 +22,11 @@ export type Education = {
   credential: string;
 };
 
+export type Certification = {
+  title: string;
+  issuer: string;
+};
+
 export type Profile = {
   name: string;
   initials: string;
@@ -35,24 +40,25 @@ export type Profile = {
   socials: SocialLink[];
   skillGroups: SkillGroup[];
   education: Education[];
+  certifications: Certification[];
 };
 
 export const profile: Profile = {
   name: "Ian Zuber",
   initials: "IZ",
-  role: "Full-Stack Software Engineer",
+  role: "AI Frontend Engineer",
   tagline:
-    "Full-stack software engineer who ships polished, AI-powered web apps end to end — from data model to the last pixel.",
+    "AI Frontend Engineer at BNY building enterprise Angular web apps — and the agents, skills, workflows, and MCP servers that power them.",
   location: "Pittsburgh, PA",
-  availability: "Available immediately · open to relocating",
+  availability: "Open to new opportunities",
   githubUsername: "ianzuber221",
   about: [
-    "I'm a full-stack software engineer with 3 years of professional experience, based in Pittsburgh, PA and open to relocating. I like owning features end to end — from the data model to the last pixel — and I'm especially drawn to applied AI.",
-    "Most recently I led development of Bayer's PassLink Cloud Web App: driving architectural decisions, mentoring offshore developers, and integrating with complex internal systems. I got here through a B.S. in Music Technology from Duquesne University, web development coursework at CCAC, and Hack Reactor's advanced software engineering program.",
+    "I'm an AI Frontend Engineer at BNY, building enterprise Angular web applications on the Platform Tools team and weaving AI into the experience — designing agents, reusable skills, multi-step workflows, and MCP servers that connect internal systems and data to LLMs.",
+    "Before BNY I spent ~2.5 years at Bayer in Pittsburgh, where I led development of the PassLink Cloud Web App for medical-device software — driving architecture, integrating complex internal systems, and mentoring offshore developers. I studied Music Technology at Duquesne University, took web development coursework at CCAC, and completed Hack Reactor's advanced software engineering program.",
   ],
   stats: [
     { label: "Experience", value: "3+ yrs" },
-    { label: "Focus", value: "Full-stack + AI" },
+    { label: "Focus", value: "Angular + AI agents" },
     { label: "Based in", value: "Pittsburgh, PA" },
   ],
   socials: [
@@ -77,20 +83,20 @@ export const profile: Profile = {
   ],
   skillGroups: [
     {
-      label: "Languages",
-      items: ["TypeScript", "JavaScript", "Python", "HTML", "CSS"],
+      label: "Frontend",
+      items: ["Angular", "React", "Next.js", "Tailwind CSS"],
     },
     {
-      label: "Frontend",
-      items: ["React", "Next.js", "Angular", "Tailwind CSS"],
+      label: "Agentic AI",
+      items: ["AI agents", "Skills & workflows", "MCP servers", "Prompt engineering"],
     },
     {
       label: "Backend & Data",
       items: ["Node.js", "Nest.js", "PostgreSQL", "MongoDB"],
     },
     {
-      label: "Cloud & AI",
-      items: ["AWS Lambda", "OpenAI", "Vercel"],
+      label: "Languages & Cloud",
+      items: ["TypeScript", "JavaScript", "Python", "AWS"],
     },
   ],
   education: [
@@ -107,6 +113,14 @@ export const profile: Profile = {
       credential: "B.S., Music Technology",
     },
   ],
+  certifications: [
+    { title: "Introduction to Large Language Models", issuer: "LinkedIn Learning" },
+    { title: "Prompt Engineering for Generative AI", issuer: "LinkedIn Learning" },
+    { title: "Generative AI vs. Traditional AI", issuer: "LinkedIn Learning" },
+    { title: "Foundations of Responsible AI", issuer: "LinkedIn Learning" },
+    { title: "Ethics in the Age of Generative AI", issuer: "LinkedIn Learning" },
+    { title: "Introduction to Artificial Intelligence", issuer: "LinkedIn Learning" },
+  ],
 };
 
 export type Experience = {
@@ -120,12 +134,26 @@ export type Experience = {
 
 export const experience: Experience[] = [
   {
-    company: "Bayer · PassLink Cloud Web App",
-    role: "Full-Stack Software Engineer",
+    company: "BNY",
+    role: "AI Frontend Engineer",
+    period: "Present",
     summary:
-      "Led development of Bayer's PassLink Cloud Web App, owning architecture and delivery across the stack.",
+      "Build enterprise Angular web applications on the Platform Tools team and weave AI into the experience.",
     highlights: [
-      "Drove architectural design decisions for a cloud web application used across complex internal systems.",
+      "Develop enterprise-scale Angular front-end experiences integrated with AI capabilities.",
+      "Design AI agents, reusable skills, and multi-step workflows for internal tooling.",
+      "Build MCP (Model Context Protocol) servers that connect internal systems and data to LLMs.",
+    ],
+    stack: ["Angular", "TypeScript", "AI Agents", "MCP", "OpenAI"],
+  },
+  {
+    company: "Bayer (Radiology)",
+    role: "Full-Stack Software Engineer",
+    period: "~2.5 yrs",
+    summary:
+      "Led development of Bayer's PassLink Cloud Web App, pioneering medical-device software solutions.",
+    highlights: [
+      "Drove architectural design for a cloud web app spanning complex internal systems.",
       "Mentored offshore developers and coordinated delivery across time zones.",
       "Integrated the app with intricate internal services and data sources.",
     ],

@@ -1,4 +1,5 @@
 import type { Project } from "@/lib/projects";
+import { projectOverrides } from "@/lib/projects";
 import { profile } from "@/lib/profile";
 
 type GitHubRepo = {
@@ -22,17 +23,24 @@ function prettify(name: string): string {
 }
 
 function toProject(repo: GitHubRepo): Project {
-  const tags = [repo.language, ...(repo.topics || [])]
-    .filter((t): t is string => Boolean(t))
-    .slice(0, 4);
+  const override = projectOverrides[repo.name.toLowerCase()];
+  const tags =
+    override?.tags ??
+    [repo.language, ...(repo.topics || [])]
+      .filter((t): t is string => Boolean(t))
+      .slice(0, 4);
   return {
     slug: repo.name,
-    name: prettify(repo.name),
-    summary: repo.description?.trim() || "A project from my GitHub — click through for details.",
+    name: override?.name ?? prettify(repo.name),
+    summary:
+      override?.summary ??
+      repo.description?.trim() ??
+      "A project from my GitHub — click through for details.",
     impact:
-      repo.stargazers_count > 0
+      override?.impact ??
+      (repo.stargazers_count > 0
         ? `★ ${repo.stargazers_count} on GitHub`
-        : repo.language || "Open source",
+        : repo.language || "Open source"),
     tags,
     repo: repo.html_url,
     demo: repo.homepage ? repo.homepage : undefined,

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
-import { profile } from "@/lib/profile";
+import { profile, experience } from "@/lib/profile";
 
 export const runtime = "nodejs";
 
@@ -10,26 +10,42 @@ type ChatContext = { company?: string; focus?: string };
 const MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
 const MAX_MESSAGES = 12;
 
+// Build the fact sheet from the single source of truth in lib/profile so the
+// assistant stays in sync whenever the profile is updated.
+function facts(): string[] {
+  const skills = profile.skillGroups
+    .map((g) => `${g.label}: ${g.items.join(", ")}`)
+    .join("; ");
+  const roles = experience.map(
+    (e) =>
+      `${e.role} at ${e.company}${e.period ? ` (${e.period})` : ""} — ${e.summary} ${e.highlights.join(" ")}`,
+  );
+  const edu = profile.education
+    .map((e) => `${e.credential} — ${e.school}`)
+    .join("; ");
+  const certs = profile.certifications.map((c) => c.title).join("; ");
+  return [
+    `${profile.name} is an ${profile.role} based in ${profile.location} (${profile.availability}).`,
+    ...roles,
+    `Skills — ${skills}.`,
+    `Education — ${edu}.`,
+    `Certifications (${profile.certifications[0]?.issuer || "LinkedIn Learning"}) — ${certs}.`,
+    "On weaknesses: he's always eager to grow and improve.",
+    "On availability: he's currently at BNY and open to compelling opportunities.",
+  ];
+}
+
 function systemPrompt(context: ChatContext): string {
   const { company, focus } = context;
   return [
-    `You are the AI assistant for ${profile.name}'s portfolio — a warm, sharp advocate speaking to a recruiter who is evaluating ${profile.name} for a software engineering role. Your goal is to help them understand his skills, experience, and personality so they're excited to interview him.`,
+    `You are the AI assistant for ${profile.name}'s portfolio — a warm, sharp advocate speaking to a recruiter evaluating ${profile.name} for a software / AI engineering role. Help them understand his skills, experience, and personality so they're excited to interview him.`,
     company
       ? `The recruiter is from ${company}. Tailor answers to resonate with their culture and product where you reasonably can.`
       : "",
-    focus
-      ? `They especially care about: ${focus}. Emphasize relevant strengths.`
-      : "",
+    focus ? `They especially care about: ${focus}. Emphasize relevant strengths.` : "",
     "",
     `Facts about ${profile.name} (do not contradict these; if you don't know something, say so rather than inventing it):`,
-    "- Full-stack software engineer with 3 years of professional experience.",
-    "- Proficient in Angular, React, Next.js, Nest.js, Node.js, AWS Lambda, and Python.",
-    "- Strong in TypeScript, JavaScript, HTML, CSS; experience with PostgreSQL and MongoDB.",
-    "- Led development of Bayer's PassLink Cloud Web App: architectural design, mentoring offshore developers, and integrating with complex internal systems.",
-    "- Based in Pittsburgh, PA; willing to relocate for the right opportunity; available to start immediately.",
-    "- Education: B.S. in Music Technology from Duquesne University; Web Development at CCAC; Advanced Software Engineering certificate from Hack Reactor.",
-    "- Seeking a competitive offer that reflects his skills and experience.",
-    "- On weaknesses: he's always eager to grow and improve.",
+    ...facts().map((f) => `- ${f}`),
     "",
     "Style: confident, warm, and persuasive with a touch of tasteful humor. Keep answers concise (2-4 sentences) unless asked for detail. Never fabricate specifics; if unsure, say so.",
   ]
@@ -40,16 +56,19 @@ function systemPrompt(context: ChatContext): string {
 function fallbackReply(messages: ChatMessage[], context: ChatContext): string {
   const last = messages[messages.length - 1]?.content?.toLowerCase() || "";
   const forCompany = context.company ? ` for a team like ${context.company}` : "";
-  if (/relocat|location|where/.test(last)) {
-    return `Ian is based in Pittsburgh, PA and is happy to relocate for the right opportunity — and he can start immediately.`;
+  if (/agent|mcp|workflow|skill|ai\b|llm/.test(last)) {
+    return `At BNY, Ian builds Angular web apps with AI woven in — designing agents, reusable skills, multi-step workflows, and MCP (Model Context Protocol) servers that connect internal systems and data to LLMs.`;
   }
-  if (/experience|background|who|about/.test(last)) {
-    return `Ian is a full-stack engineer with 3 years of experience across Angular, React, Next.js, Nest.js, Node.js, AWS Lambda, and Python. He most recently led Bayer's PassLink Cloud Web App.`;
+  if (/relocat|location|where|based/.test(last)) {
+    return `Ian is based in Pittsburgh, PA. He's currently an AI Frontend Engineer at BNY and open to compelling opportunities.`;
+  }
+  if (/experience|background|who|about|bny|bayer|current/.test(last)) {
+    return `Ian is an AI Frontend Engineer at BNY, building enterprise Angular apps and AI agents/skills/workflows/MCP servers on the Platform Tools team. Previously he led Bayer's PassLink Cloud Web App.`;
   }
   if (/hire|why|fit|strength/.test(last)) {
-    return `Great fit${forCompany}: Ian ships full-stack features end to end, led Bayer's PassLink Cloud Web App (architecture, mentoring, tricky integrations), and pairs strong fundamentals with a real passion for applied AI.`;
+    return `Great fit${forCompany}: Ian ships enterprise Angular front-ends with AI built in (agents, skills, workflows, MCP servers), previously led Bayer's PassLink Cloud Web App, and pairs strong fundamentals with a real passion for applied AI.`;
   }
-  return `Thanks for stopping by! Ian is a full-stack software engineer (3 yrs) who led Bayer's PassLink Cloud Web App and loves applied AI. Add an OPENAI_API_KEY to unlock the fully interactive assistant — meanwhile, ask about his experience, the Bayer project, or relocation.`;
+  return `Thanks for stopping by! Ian is an AI Frontend Engineer at BNY building Angular apps and AI agents/MCP servers, and previously led Bayer's PassLink Cloud Web App. Add an OPENAI_API_KEY to unlock the fully interactive assistant — meanwhile, ask about his BNY work, the Bayer project, or his AI/agent experience.`;
 }
 
 function streamText(text: string): Response {
