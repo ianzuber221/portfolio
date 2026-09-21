@@ -65,8 +65,16 @@ export async function fetchGitHubProjects(
     const repos: unknown = await res.json();
     if (!Array.isArray(repos)) return null;
 
+    const username = profile.githubUsername.toLowerCase();
     const projects = (repos as GitHubRepo[])
-      .filter((r) => r && !r.fork && !r.archived)
+      .filter(
+        (r) =>
+          r &&
+          !r.fork &&
+          !r.archived &&
+          // Exclude the special profile README repo (owner/owner).
+          r.name.toLowerCase() !== username,
+      )
       .sort(
         (a, b) =>
           b.stargazers_count - a.stargazers_count ||
