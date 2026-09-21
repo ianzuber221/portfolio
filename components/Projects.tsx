@@ -1,16 +1,29 @@
 import { ProjectCard } from "@/components/ProjectCard";
 import { SectionHeading } from "@/components/SectionHeading";
 import { Reveal } from "@/components/Reveal";
-import { projects } from "@/lib/projects";
+import { projects as curatedProjects } from "@/lib/projects";
+import { fetchGitHubProjects } from "@/lib/github";
 
-export function Projects() {
+export async function Projects() {
+  const live = await fetchGitHubProjects();
+  const isLive = Boolean(live && live.length);
+  const projects = isLive ? live! : curatedProjects;
+
   return (
     <section id="work" className="container-page py-16 sm:py-20">
-      <SectionHeading
-        eyebrow="Selected work"
-        title="Things I've designed and shipped"
-        description="A mix of production products and side experiments — each one an excuse to sweat the details."
-      />
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <SectionHeading
+          eyebrow="Selected work"
+          title="Things I've designed and shipped"
+          description="A mix of production work and side projects — each one an excuse to sweat the details."
+        />
+        {isLive && (
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-[rgb(var(--border)/0.18)] px-3 py-1 text-xs muted">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+            Live from GitHub
+          </span>
+        )}
+      </div>
       <div className="mt-10 grid gap-5 sm:grid-cols-2">
         {projects.map((project, i) => (
           <Reveal key={project.slug} delay={i * 70}>

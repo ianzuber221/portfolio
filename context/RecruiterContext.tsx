@@ -9,45 +9,33 @@ import {
   useState,
 } from "react";
 
-export type RecruiterSession = {
+export type RecruiterContextValue = {
   company: string;
   focus: string;
-  summary: string;
-  summarySource: "openai" | "fallback" | null;
-};
-
-type RecruiterContextValue = {
-  session: RecruiterSession;
   hydrated: boolean;
-  update: (patch: Partial<RecruiterSession>) => void;
+  update: (patch: Partial<{ company: string; focus: string }>) => void;
   reset: () => void;
 };
 
-const EMPTY_SESSION: RecruiterSession = {
-  company: "",
-  focus: "",
-  summary: "",
-  summarySource: null,
-};
-
-const STORAGE_KEY = "portfolio-recruiter-session";
+const STORAGE_KEY = "portfolio-recruiter-context";
 
 const RecruiterContext = createContext<RecruiterContextValue | undefined>(
   undefined,
 );
 
-export function RecruiterProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [session, setSession] = useState<RecruiterSession>(EMPTY_SESSION);
+export function RecruiterProvider({ children }: { children: React.ReactNode }) {
+  const [company, setCompany] = useState("");
+  const [focus, setFocus] = useState("");
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (raw) setSession({ ...EMPTY_SESSION, ...JSON.parse(raw) });
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        setCompany(parsed.company || "");
+        setFocus(parsed.focus || "");
+      }
     } catch {
       // ignore malformed storage
     }
@@ -56,21 +44,26 @@ export function RecruiterProvider({
 
   useEffect(() => {
     if (!hydrated) return;
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
-  }, [session, hydrated]);
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ company, focus }));
+  }, [company, focus, hydrated]);
 
-  const update = useCallback((patch: Partial<RecruiterSession>) => {
-    setSession((prev) => ({ ...prev, ...patch }));
-  }, []);
+  const update = useCallback(
+    (patch: Partial<{ company: string; focus: string }>) => {
+      if (patch.company !== undefined) setCompany(patch.company);
+      if (patch.focus !== undefined) setFocus(patch.focus);
+    },
+    [],
+  );
 
   const reset = useCallback(() => {
-    setSession(EMPTY_SESSION);
+    setCompany("");
+    setFocus("");
     window.localStorage.removeItem(STORAGE_KEY);
   }, []);
 
   const value = useMemo(
-    () => ({ session, hydrated, update, reset }),
-    [session, hydrated, update, reset],
+    () => ({ company, focus, hydrated, update, reset }),
+    [company, focus, hydrated, update, reset],
   );
 
   return (

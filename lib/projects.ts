@@ -9,43 +9,25 @@ export type Project = {
   featured?: boolean;
 };
 
-// Curated project data. When an OpenAI key is configured, the recruiter
-// summaries elsewhere on the page are regenerated on demand; project copy
-// here stays hand-written for accuracy.
+// Curated fallback used when the live GitHub API is unavailable (rate limits,
+// network, etc.). Kept intentionally short and accurate.
 export const projects: Project[] = [
   {
     slug: "ai-portfolio",
     name: "AI-Powered Portfolio",
     summary:
-      "This site — a Next.js portfolio that personalizes its pitch to each recruiter using OpenAI, with a curated fallback when no key is set.",
-    impact: "Personalizes in real time",
+      "This site — a Next.js portfolio with an OpenAI assistant that answers recruiter questions, plus projects pulled live from GitHub.",
+    impact: "Interactive AI assistant",
     tags: ["Next.js", "TypeScript", "Tailwind", "OpenAI"],
     repo: "https://github.com/ianzuber221/portfolio",
     featured: true,
   },
   {
-    slug: "realtime-collab",
-    name: "Realtime Collab Board",
+    slug: "passlink",
+    name: "Bayer PassLink Cloud Web App",
     summary:
-      "A multiplayer whiteboard with live cursors, presence, and conflict-free syncing built on CRDTs and websocket fan-out.",
-    impact: "Sub-100ms sync",
-    tags: ["React", "WebSockets", "CRDT", "Node.js"],
-    featured: true,
-  },
-  {
-    slug: "semantic-search",
-    name: "Semantic Docs Search",
-    summary:
-      "Retrieval-augmented search over technical docs that chunks content, embeds it into a vector store, and streams cited answers.",
-    impact: "Grounded, cited answers",
-    tags: ["Python", "Embeddings", "pgvector", "FastAPI"],
-  },
-  {
-    slug: "devops-dashboard",
-    name: "Deploy Health Dashboard",
-    summary:
-      "A single pane of glass that aggregates CI/CD, error rates, and uptime so on-call engineers can spot and roll back bad deploys fast.",
-    impact: "Faster incident response",
-    tags: ["Next.js", "AWS", "Observability"],
+      "Led development of a cloud web app integrating complex internal systems — architecture, delivery, and mentoring offshore developers.",
+    impact: "Led architecture & delivery",
+    tags: ["Angular", "Nest.js", "AWS Lambda", "TypeScript"],
   },
 ];

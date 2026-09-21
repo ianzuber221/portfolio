@@ -37,9 +37,12 @@ export function Hero() {
         </p>
 
         <div className="mt-8 flex animate-fade-in-up flex-wrap items-center gap-3">
-          <Link href="#work" className="btn-primary">
-            View my work
+          <Link href="#ai" className="btn-primary">
+            Chat with my AI
             <ArrowUpRightIcon width={16} height={16} />
+          </Link>
+          <Link href="#work" className="btn-ghost">
+            View my work
           </Link>
           {email && (
             <Link href={email.href} className="btn-ghost">

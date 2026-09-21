@@ -17,6 +17,11 @@ export type Stat = {
   value: string;
 };
 
+export type Education = {
+  school: string;
+  credential: string;
+};
+
 export type Profile = {
   name: string;
   initials: string;
@@ -24,28 +29,31 @@ export type Profile = {
   tagline: string;
   location: string;
   availability: string;
+  githubUsername: string;
   about: string[];
   stats: Stat[];
   socials: SocialLink[];
   skillGroups: SkillGroup[];
+  education: Education[];
 };
 
 export const profile: Profile = {
   name: "Ian Zuber",
   initials: "IZ",
-  role: "Full-Stack & AI Engineer",
+  role: "Full-Stack Software Engineer",
   tagline:
-    "I design and ship polished web products — increasingly ones with applied AI at their core. I care as much about the empty state as the happy path.",
-  location: "United States",
-  availability: "Open to new roles",
+    "Full-stack software engineer who ships polished, AI-powered web apps end to end — from data model to the last pixel.",
+  location: "Pittsburgh, PA",
+  availability: "Available immediately · open to relocating",
+  githubUsername: "ianzuber221",
   about: [
-    "I'm a full-stack engineer working at the intersection of clean product design and applied AI. From data model to design system, I like owning a feature end to end and sweating the details that make software feel effortless.",
-    "This site is a living résumé, built with Next.js, Tailwind, and OpenAI. It even personalizes itself to the recruiter reading it — try the panel below.",
+    "I'm a full-stack software engineer with 3 years of professional experience, based in Pittsburgh, PA and open to relocating. I like owning features end to end — from the data model to the last pixel — and I'm especially drawn to applied AI.",
+    "Most recently I led development of Bayer's PassLink Cloud Web App: driving architectural decisions, mentoring offshore developers, and integrating with complex internal systems. I got here through a B.S. in Music Technology from Duquesne University, web development coursework at CCAC, and Hack Reactor's advanced software engineering program.",
   ],
   stats: [
-    { label: "Years shipping", value: "5+" },
-    { label: "Production apps", value: "12+" },
-    { label: "Core stack", value: "TS · React · Next" },
+    { label: "Experience", value: "3+ yrs" },
+    { label: "Focus", value: "Full-stack + AI" },
+    { label: "Based in", value: "Pittsburgh, PA" },
   ],
   socials: [
     {
@@ -70,19 +78,33 @@ export const profile: Profile = {
   skillGroups: [
     {
       label: "Languages",
-      items: ["TypeScript", "JavaScript", "Python", "SQL"],
+      items: ["TypeScript", "JavaScript", "Python", "HTML", "CSS"],
     },
     {
       label: "Frontend",
-      items: ["React", "Next.js", "Tailwind CSS", "Framer Motion"],
+      items: ["React", "Next.js", "Angular", "Tailwind CSS"],
     },
     {
       label: "Backend & Data",
-      items: ["Node.js", "PostgreSQL", "Prisma", "REST / tRPC"],
+      items: ["Node.js", "Nest.js", "PostgreSQL", "MongoDB"],
     },
     {
-      label: "AI & Platform",
-      items: ["OpenAI", "Embeddings / RAG", "AWS", "Vercel"],
+      label: "Cloud & AI",
+      items: ["AWS Lambda", "OpenAI", "Vercel"],
+    },
+  ],
+  education: [
+    {
+      school: "Hack Reactor",
+      credential: "Advanced Software Engineering Certificate",
+    },
+    {
+      school: "Community College of Allegheny County",
+      credential: "Web Development",
+    },
+    {
+      school: "Duquesne University",
+      credential: "B.S., Music Technology",
     },
   ],
 };
@@ -90,7 +112,7 @@ export const profile: Profile = {
 export type Experience = {
   company: string;
   role: string;
-  period: string;
+  period?: string;
   summary: string;
   highlights: string[];
   stack: string[];
@@ -98,29 +120,15 @@ export type Experience = {
 
 export const experience: Experience[] = [
   {
-    company: "Stealth Startup",
-    role: "Founding Engineer",
-    period: "2023 — Present",
+    company: "Bayer · PassLink Cloud Web App",
+    role: "Full-Stack Software Engineer",
     summary:
-      "Building the core product from zero to one, owning the full stack from database to design system.",
+      "Led development of Bayer's PassLink Cloud Web App, owning architecture and delivery across the stack.",
     highlights: [
-      "Shipped the MVP in weeks on Next.js App Router with a serverless backend.",
-      "Designed an AI feature pipeline on OpenAI with graceful, cost-aware fallbacks.",
-      "Stood up CI/CD and preview deployments so every PR is testable in isolation.",
+      "Drove architectural design decisions for a cloud web application used across complex internal systems.",
+      "Mentored offshore developers and coordinated delivery across time zones.",
+      "Integrated the app with intricate internal services and data sources.",
     ],
-    stack: ["Next.js", "TypeScript", "OpenAI", "Postgres"],
-  },
-  {
-    company: "Confidential (NDA)",
-    role: "Software Engineer",
-    period: "2021 — 2023",
-    summary:
-      "Delivered customer-facing features for a high-traffic web platform. Details withheld per NDA.",
-    highlights: [
-      "Cut client bundle size and adopted server components to improve page performance.",
-      "Partnered with design to build an accessible, reusable component library.",
-      "Mentored two junior engineers through their first production launches.",
-    ],
-    stack: ["React", "Node.js", "AWS"],
+    stack: ["Angular", "Nest.js", "Node.js", "AWS Lambda", "TypeScript", "PostgreSQL"],
   },
 ];

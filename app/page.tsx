@@ -3,8 +3,9 @@ import { Hero } from "@/components/Hero";
 import { Skills } from "@/components/Skills";
 import { Projects } from "@/components/Projects";
 import { Experience } from "@/components/Experience";
+import { Education } from "@/components/Education";
 import { About } from "@/components/About";
-import { RecruiterPanel } from "@/components/RecruiterPanel";
+import { AiChat } from "@/components/AiChat";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/Reveal";
 
@@ -19,9 +20,10 @@ export default function Home() {
         </Reveal>
         <Projects />
         <Experience />
+        <Education />
         <About />
         <Reveal>
-          <RecruiterPanel />
+          <AiChat />
         </Reveal>
       </main>
       <Footer />
