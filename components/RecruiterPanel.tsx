@@ -1,20 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecruiter } from "@/context/RecruiterContext";
 
 export function RecruiterPanel() {
   const { session, hydrated, update, reset } = useRecruiter();
-  const [company, setCompany] = useState(session.company);
-  const [focus, setFocus] = useState(session.focus);
+  const [company, setCompany] = useState("");
+  const [focus, setFocus] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Keep local inputs in sync once the persisted session hydrates.
-  if (hydrated && !loading && company === "" && focus === "" && session.company) {
-    setCompany(session.company);
-    setFocus(session.focus);
-  }
+  // Once the persisted session hydrates from localStorage, seed the local
+  // inputs so a returning visitor sees their previous company/focus.
+  useEffect(() => {
+    if (!hydrated) return;
+    setCompany((prev) => (prev === "" ? session.company : prev));
+    setFocus((prev) => (prev === "" ? session.focus : prev));
+    // Only re-run when hydration completes, not on every keystroke.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hydrated]);
 
   async function personalize(e: React.FormEvent) {
     e.preventDefault();
