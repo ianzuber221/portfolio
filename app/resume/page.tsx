@@ -37,6 +37,14 @@ export default function ResumePage() {
                 {s.handle}
               </a>
             ))}
+            <a
+              href={profile.calendly}
+              className="hover:text-brand-700"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              calendly.com/ianzuber
+            </a>
           </div>
         </header>
 

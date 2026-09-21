@@ -35,6 +35,7 @@ export type Profile = {
   location: string;
   availability: string;
   githubUsername: string;
+  calendly: string;
   about: string[];
   stats: Stat[];
   socials: SocialLink[];
@@ -52,6 +53,7 @@ export const profile: Profile = {
   location: "Pittsburgh, PA",
   availability: "Open to new opportunities",
   githubUsername: "ianzuber221",
+  calendly: "https://calendly.com/ianzuber",
   about: [
     "I'm an AI Frontend Engineer at BNY, building enterprise Angular web applications on the Platform Tools team and weaving AI into the experience — designing agents, reusable skills, multi-step workflows, and MCP servers that connect internal systems and data to LLMs.",
     "Before BNY I spent ~2.5 years at Bayer in Pittsburgh, where I led development of the PassLink Cloud Web App for medical-device software — driving architecture, integrating complex internal systems, and mentoring offshore developers. I studied Music Technology at Duquesne University, took web development coursework at CCAC, and completed Hack Reactor's advanced software engineering program.",

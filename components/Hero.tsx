@@ -3,8 +3,6 @@ import { profile } from "@/lib/profile";
 import { SocialIcon, ArrowUpRightIcon } from "@/components/icons";
 
 export function Hero() {
-  const email = profile.socials.find((s) => s.kind === "email");
-
   return (
     <section id="top" className="relative overflow-hidden">
       <div
@@ -46,11 +44,14 @@ export function Hero() {
             <Link href="#work" className="btn-ghost w-full sm:w-auto">
               View my work
             </Link>
-            {email && (
-              <Link href={email.href} className="btn-ghost w-full sm:w-auto">
-                Get in touch
-              </Link>
-            )}
+            <Link
+              href={profile.calendly}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-ghost w-full sm:w-auto"
+            >
+              Book a call
+            </Link>
             <div className="flex items-center justify-center gap-1 sm:ml-1">
               {profile.socials.map((social) => (
                 <Link

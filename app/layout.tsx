@@ -68,9 +68,10 @@ const personJsonLd = {
     addressCountry: "US",
   },
   url: siteUrl,
-  sameAs: profile.socials
-    .filter((s) => s.kind !== "email")
-    .map((s) => s.href),
+  sameAs: [
+    ...profile.socials.filter((s) => s.kind !== "email").map((s) => s.href),
+    profile.calendly,
+  ],
   alumniOf: profile.education.map((e) => ({
     "@type": "EducationalOrganization",
     name: e.school,

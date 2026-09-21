@@ -29,10 +29,18 @@ export function Footer() {
         </p>
 
         <div className="mt-8 flex flex-wrap items-center gap-3">
+          <Link
+            href={profile.calendly}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary"
+          >
+            Book a call
+            <ArrowUpRightIcon width={16} height={16} />
+          </Link>
           {email && (
-            <Link href={email.href} className="btn-primary">
+            <Link href={email.href} className="btn-ghost">
               Email me
-              <ArrowUpRightIcon width={16} height={16} />
             </Link>
           )}
           <Link href="/resume" className="btn-ghost">

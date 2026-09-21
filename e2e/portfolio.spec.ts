@@ -36,6 +36,10 @@ test.describe("routes", () => {
       const res = await request.get(path);
       expect(res.status(), path).toBe(status);
     }
+    const health = await request.get("/api/health");
+    const json = (await health.json()) as Record<string, unknown>;
+    expect(json).not.toHaveProperty("aiEnabled");
+    expect(json.status).toBe("ok");
   });
 
   test("opengraph image is a PNG", async ({ request }) => {
@@ -227,6 +231,20 @@ test.describe("desktop", () => {
     expect(box).toBeTruthy();
     // Desktop CTAs stay compact, not full-bleed.
     expect(box!.width).toBeLessThan(400);
+  });
+});
+
+test.describe("calendly", () => {
+  test("home and resume offer a Book a call link", async ({ page }) => {
+    await page.goto("/");
+    const home = page.getByRole("link", { name: "Book a call" }).first();
+    await expect(home).toBeVisible();
+    await expect(home).toHaveAttribute("href", "https://calendly.com/ianzuber");
+
+    await page.goto("/resume");
+    const resume = page.getByRole("link", { name: "calendly.com/ianzuber" });
+    await expect(resume).toBeVisible();
+    await expect(resume).toHaveAttribute("href", "https://calendly.com/ianzuber");
   });
 });
 

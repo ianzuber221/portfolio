@@ -8,6 +8,7 @@ describe("profile invariants", () => {
     expect(profile.role).toMatch(/AI Frontend Engineer/i);
     expect(profile.location).toMatch(/Pittsburgh/i);
     expect(profile.githubUsername).toBe("ianzuber221");
+    expect(profile.calendly).toBe("https://calendly.com/ianzuber");
     expect(experience[0]?.company).toBe("BNY");
     expect(experience.some((e) => /Bayer/i.test(e.company))).toBe(true);
   });

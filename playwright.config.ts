@@ -22,6 +22,10 @@ export default defineConfig({
         url: baseURL,
         reuseExistingServer: !process.env.CI,
         timeout: 60_000,
+        env: {
+          ...process.env,
+          CHAT_RATE_LIMIT: "1000",
+        },
       },
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },

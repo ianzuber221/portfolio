@@ -47,7 +47,9 @@ export function AiChat() {
           context: { company, focus },
         }),
       });
-      if (!res.ok || !res.body) throw new Error("Request failed");
+      if (!res.ok || !res.body) {
+        throw new Error(res.status === 429 ? "rate-limit" : "Request failed");
+      }
 
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
@@ -62,12 +64,15 @@ export function AiChat() {
           return copy;
         });
       }
-    } catch {
+    } catch (err) {
+      const rateLimited = err instanceof Error && err.message === "rate-limit";
       setMessages((prev) => {
         const copy = [...prev];
         copy[copy.length - 1] = {
           role: "assistant",
-          content: "Sorry — something went wrong. Please try again.",
+          content: rateLimited
+            ? "You're sending messages a little fast — wait a few seconds and try again."
+            : "Sorry — something went wrong. Please try again.",
         };
         return copy;
       });

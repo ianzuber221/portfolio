@@ -1,14 +1,22 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 import { profile, experience } from "@/lib/profile";
+import {
+  sanitizeContext,
+  sanitizeMessages,
+  bodyTooLarge,
+  type ChatMessage,
+  type ChatContext,
+} from "@/lib/chat-guard";
+import { clientIp, rateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
-type ChatMessage = { role: "user" | "assistant"; content: string };
-type ChatContext = { company?: string; focus?: string };
-
 const MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
-const MAX_MESSAGES = 12;
+const CHAT_RATE_LIMIT = Math.max(
+  1,
+  Number(process.env.CHAT_RATE_LIMIT || 12) || 12,
+);
 
 // Build the fact sheet from the single source of truth in lib/profile so the
 // assistant stays in sync whenever the profile is updated.
@@ -31,7 +39,7 @@ function facts(): string[] {
     `Education — ${edu}.`,
     `Certifications (${profile.certifications[0]?.issuer || "LinkedIn Learning"}) — ${certs}.`,
     "On weaknesses: he's always eager to grow and improve.",
-    "On availability: he's currently at BNY and open to compelling opportunities.",
+    `On availability: he's currently at BNY and open to compelling opportunities. Recruiters can book a call at ${profile.calendly}.`,
   ];
 }
 
@@ -59,6 +67,9 @@ function fallbackReply(messages: ChatMessage[], context: ChatContext): string {
   if (/agent|mcp|workflow|skill|ai\b|llm/.test(last)) {
     return `At BNY, Ian builds Angular web apps with AI woven in — designing agents, reusable skills, multi-step workflows, and MCP (Model Context Protocol) servers that connect internal systems and data to LLMs.`;
   }
+  if (/call|calendly|schedul|book a|interview|meet|contact|email/.test(last)) {
+    return `The fastest path is to book time at ${profile.calendly} — or email ianzuber321@gmail.com. He's based in Pittsburgh and open to conversations.`;
+  }
   if (/relocat|location|where|based/.test(last)) {
     return `Ian is based in Pittsburgh, PA. He's currently an AI Frontend Engineer at BNY and open to compelling opportunities.`;
   }
@@ -68,7 +79,7 @@ function fallbackReply(messages: ChatMessage[], context: ChatContext): string {
   if (/hire|why|fit|strength/.test(last)) {
     return `Great fit${forCompany}: Ian ships enterprise Angular front-ends with AI built in (agents, skills, workflows, MCP servers), previously led Bayer's PassLink Cloud Web App, and pairs strong fundamentals with a real passion for applied AI.`;
   }
-  return `Thanks for stopping by! Ian is an AI Frontend Engineer at BNY building Angular apps and AI agents/MCP servers, and previously led Bayer's PassLink Cloud Web App. Add an OPENAI_API_KEY to unlock the fully interactive assistant — meanwhile, ask about his BNY work, the Bayer project, or his AI/agent experience.`;
+  return `Thanks for stopping by! Ian is an AI Frontend Engineer at BNY building Angular apps and AI agents/MCP servers, and previously led Bayer's PassLink Cloud Web App. Ask about his BNY work, the Bayer project, or his AI/agent experience.`;
 }
 
 function streamText(text: string): Response {
@@ -89,15 +100,33 @@ function streamText(text: string): Response {
 }
 
 export async function POST(request: Request) {
-  let body: { messages?: ChatMessage[]; context?: ChatContext } = {};
+  const limited = rateLimit(`chat:${clientIp(request)}`, {
+    limit: CHAT_RATE_LIMIT,
+  });
+  if (!limited.ok) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait a moment." },
+      {
+        status: 429,
+        headers: { "Retry-After": String(limited.retryAfterSec) },
+      },
+    );
+  }
+
+  if (bodyTooLarge(request)) {
+    return NextResponse.json({ error: "Request too large" }, { status: 413 });
+  }
+
+  let body: unknown = {};
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  const messages = Array.isArray(body.messages) ? body.messages.slice(-MAX_MESSAGES) : [];
-  const context = body.context || {};
+  const payload = body && typeof body === "object" ? (body as Record<string, unknown>) : {};
+  const messages = sanitizeMessages(payload.messages);
+  const context = sanitizeContext(payload.context);
 
   if (messages.length === 0) {
     return NextResponse.json({ error: "No messages provided" }, { status: 400 });
