@@ -53,9 +53,25 @@ export const projectOverrides: Record<
   },
 };
 
+export const PINNED_PROJECT_SLUGS = [
+  "passlink",
+  "portfolio",
+  "supernova",
+] as const;
+
 // Curated fallback used when the live GitHub API is unavailable (rate limits,
-// network, etc.). These are real projects with accurate write-ups.
+// network, etc.). These are real projects with accurate write-ups. Pinned
+// production work is listed first so recruiters never land on a side project.
 export const projects: Project[] = [
+  {
+    slug: "passlink",
+    name: "Bayer PassLink Cloud Web App",
+    summary:
+      "Led development of a cloud web app for medical-device software — architecture, delivery, and mentoring offshore developers across complex internal systems.",
+    impact: "Led architecture & delivery",
+    tags: ["Angular", "Nest.js", "AWS Lambda", "TypeScript"],
+    featured: true,
+  },
   {
     slug: "portfolio",
     name: "AI-Powered Portfolio",
@@ -67,20 +83,13 @@ export const projects: Project[] = [
     featured: true,
   },
   {
-    slug: "passlink",
-    name: "Bayer PassLink Cloud Web App",
-    summary:
-      "Led development of a cloud web app for medical-device software — architecture, delivery, and mentoring offshore developers across complex internal systems.",
-    impact: "Led architecture & delivery",
-    tags: ["Angular", "Nest.js", "AWS Lambda", "TypeScript"],
-  },
-  {
     slug: "supernova",
     name: "Supernova Reviews Service",
     summary:
       "Backend for a reviews service scaled to 1,500 req/s at sub-50ms on load-balanced AWS EC2 instances behind NGINX.",
     impact: "1,500 req/s at <50ms",
     tags: ["Node.js", "Express", "PostgreSQL", "AWS"],
+    featured: true,
   },
   {
     slug: "arcade",
@@ -91,3 +100,58 @@ export const projects: Project[] = [
     tags: ["React", "Express", "Firebase"],
   },
 ];
+
+/**
+ * Always lead with pinned production work, then fill remaining slots from
+ * live GitHub (when available) without duplicating slugs. Curated copy wins
+ * for known projects; GitHub still supplies repo/demo URLs.
+ */
+export function mergePortfolioProjects(
+  live: Project[] | null,
+  curated: Project[] = projects,
+  pinnedSlugs: readonly string[] = PINNED_PROJECT_SLUGS,
+  limit = 6,
+): Project[] {
+  const catalog = new Map<string, Project>();
+
+  for (const project of curated) {
+    catalog.set(project.slug.toLowerCase(), { ...project });
+  }
+
+  for (const project of live ?? []) {
+    const key = project.slug.toLowerCase();
+    const existing = catalog.get(key);
+    catalog.set(
+      key,
+      existing
+        ? {
+            ...existing,
+            repo: project.repo ?? existing.repo,
+            demo: project.demo ?? existing.demo,
+          }
+        : { ...project },
+    );
+  }
+
+  const used = new Set<string>();
+  const merged: Project[] = [];
+
+  for (const slug of pinnedSlugs) {
+    const project = catalog.get(slug.toLowerCase());
+    if (!project) continue;
+    merged.push({ ...project, featured: true });
+    used.add(slug.toLowerCase());
+  }
+
+  for (const item of [...(live ?? []), ...curated]) {
+    if (merged.length >= limit) break;
+    const key = item.slug.toLowerCase();
+    if (used.has(key)) continue;
+    const project = catalog.get(key);
+    if (!project) continue;
+    merged.push({ ...project, featured: Boolean(project.featured) });
+    used.add(key);
+  }
+
+  return merged.slice(0, limit);
+}

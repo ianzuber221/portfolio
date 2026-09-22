@@ -5,8 +5,9 @@ import "./globals.css";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { RecruiterProvider } from "@/context/RecruiterContext";
 import { profile } from "@/lib/profile";
+import { getSiteUrl } from "@/lib/site";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ianzuber.dev";
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

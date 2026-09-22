@@ -1,13 +1,13 @@
 import { ProjectCard } from "@/components/ProjectCard";
 import { SectionHeading } from "@/components/SectionHeading";
 import { Reveal } from "@/components/Reveal";
-import { projects as curatedProjects } from "@/lib/projects";
+import { mergePortfolioProjects } from "@/lib/projects";
 import { fetchGitHubProjects } from "@/lib/github";
 
 export async function Projects() {
-  const live = await fetchGitHubProjects();
+  const live = await fetchGitHubProjects(12);
+  const projects = mergePortfolioProjects(live);
   const isLive = Boolean(live && live.length);
-  const projects = isLive ? live! : curatedProjects;
 
   return (
     <section id="work" className="container-page py-16 sm:py-20">
@@ -15,7 +15,7 @@ export async function Projects() {
         <SectionHeading
           eyebrow="Selected work"
           title="Things I've designed and shipped"
-          description="A mix of production work and side projects — each one an excuse to sweat the details."
+          description="Production work first, then selected GitHub projects."
         />
         {isLive && (
           <span className="inline-flex items-center gap-1.5 rounded-full border border-[rgb(var(--border)/0.18)] px-3 py-1 text-xs muted">

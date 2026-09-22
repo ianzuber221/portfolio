@@ -42,6 +42,14 @@ test.describe("routes", () => {
     expect(json.status).toBe("ok");
   });
 
+  test("sitemap uses the live production host", async ({ request }) => {
+    const res = await request.get("/sitemap.xml");
+    expect(res.status()).toBe(200);
+    expect(await res.text()).toContain(
+      "portfolio-ianzuber221s-projects.vercel.app",
+    );
+  });
+
   test("opengraph image is a PNG", async ({ request }) => {
     const res = await request.get("/opengraph-image");
     expect(res.status()).toBe(200);
@@ -231,6 +239,16 @@ test.describe("desktop", () => {
     expect(box).toBeTruthy();
     // Desktop CTAs stay compact, not full-bleed.
     expect(box!.width).toBeLessThan(400);
+  });
+});
+
+test.describe("work", () => {
+  test("pins PassLink, the portfolio, and Supernova first", async ({ page }) => {
+    await page.goto("/");
+    const names = await page.locator("#work h3").allTextContents();
+    expect(names[0]).toMatch(/PassLink/i);
+    expect(names[1]).toMatch(/Portfolio/i);
+    expect(names[2]).toMatch(/Supernova/i);
   });
 });
 
