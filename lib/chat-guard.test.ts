@@ -5,6 +5,7 @@ import {
   bodyTooLarge,
   MAX_CONTENT_CHARS,
   MAX_CONTEXT_CHARS,
+  MAX_JD_CHARS,
 } from "@/lib/chat-guard";
 
 describe("sanitizeMessages", () => {
@@ -48,13 +49,21 @@ describe("sanitizeContext", () => {
     expect(cleaned.company).toHaveLength(MAX_CONTEXT_CHARS);
     expect(cleaned).not.toHaveProperty("extra");
   });
+
+  it("keeps a clipped job description", () => {
+    const jd = "Angular MCP engineer. " + "x".repeat(5000);
+    const cleaned = sanitizeContext({ jd, extra: "drop" });
+    expect(cleaned.jd?.startsWith("Angular MCP engineer.")).toBe(true);
+    expect(cleaned.jd?.length).toBeLessThanOrEqual(MAX_JD_CHARS);
+    expect(cleaned).not.toHaveProperty("extra");
+  });
 });
 
 describe("bodyTooLarge", () => {
   it("rejects oversized content-length", () => {
     const big = new Request("http://localhost/api/chat", {
       method: "POST",
-      headers: { "content-length": "20000" },
+      headers: { "content-length": "30000" },
     });
     expect(bodyTooLarge(big)).toBe(true);
     const ok = new Request("http://localhost/api/chat", {

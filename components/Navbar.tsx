@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { profile } from "@/lib/profile";
 
@@ -14,6 +15,8 @@ const NAV_LINKS = [
 ];
 
 export function Navbar() {
+  const pathname = usePathname();
+  const home = pathname === "/" ? "" : "/";
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -34,7 +37,7 @@ export function Navbar() {
     >
       <nav className="container-page flex items-center justify-between py-4">
         <Link
-          href="#top"
+          href={home ? "/" : "#top"}
           className="flex items-center gap-2 font-mono text-sm font-semibold tracking-tight"
         >
           <span className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 text-xs font-bold text-white">
@@ -47,7 +50,7 @@ export function Navbar() {
           <ul className="hidden items-center gap-6 text-sm muted sm:flex">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="transition hover:text-[rgb(var(--foreground))]">
+                <Link href={`${home}${link.href}`} className="transition hover:text-[rgb(var(--foreground))]">
                   {link.label}
                 </Link>
               </li>
@@ -82,7 +85,7 @@ export function Navbar() {
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
                 <Link
-                  href={link.href}
+                  href={`${home}${link.href}`}
                   onClick={() => setOpen(false)}
                   className="block rounded-lg px-2 py-3 text-sm transition hover:bg-[rgb(var(--surface))]/60"
                 >

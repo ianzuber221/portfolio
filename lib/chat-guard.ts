@@ -1,10 +1,11 @@
 export type ChatMessage = { role: "user" | "assistant"; content: string };
-export type ChatContext = { company?: string; focus?: string };
+export type ChatContext = { company?: string; focus?: string; jd?: string };
 
 export const MAX_MESSAGES = 12;
 export const MAX_CONTENT_CHARS = 1000;
 export const MAX_CONTEXT_CHARS = 80;
-export const MAX_BODY_BYTES = 16_000;
+export const MAX_JD_CHARS = 4_000;
+export const MAX_BODY_BYTES = 24_000;
 
 function clip(value: unknown, max: number): string {
   if (typeof value !== "string") return "";
@@ -16,9 +17,11 @@ export function sanitizeContext(raw: unknown): ChatContext {
   const obj = raw as Record<string, unknown>;
   const company = clip(obj.company, MAX_CONTEXT_CHARS);
   const focus = clip(obj.focus, MAX_CONTEXT_CHARS);
+  const jd = clip(obj.jd, MAX_JD_CHARS);
   return {
     ...(company ? { company } : {}),
     ...(focus ? { focus } : {}),
+    ...(jd ? { jd } : {}),
   };
 }
 

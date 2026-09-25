@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { experience, profile } from "@/lib/profile";
 import { projects, projectOverrides } from "@/lib/projects";
+import { supernovaCaseStudy } from "@/lib/case-studies";
 
 describe("profile invariants", () => {
   it("describes the current BNY AI Frontend role", () => {
@@ -11,6 +12,14 @@ describe("profile invariants", () => {
     expect(profile.calendly).toBe("https://calendly.com/ianzuber");
     expect(experience[0]?.company).toBe("BNY");
     expect(experience.some((e) => /Bayer/i.test(e.company))).toBe(true);
+  });
+
+  it("has a supernova case study sourced from the SDC write-up", () => {
+    const supernova = projects.find((p) => p.slug === "supernova");
+    expect(supernova?.caseStudy).toBe("/work/supernova");
+    expect(supernovaCaseStudy.problem).toMatch(/1,000 requests per second/i);
+    expect(supernovaCaseStudy.approach.join(" ")).toMatch(/NGINX/i);
+    expect(supernovaCaseStudy.impact.join(" ")).toMatch(/20ms/i);
   });
 
   it("has contact links and education/certifications", () => {

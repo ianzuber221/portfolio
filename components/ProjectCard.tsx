@@ -30,8 +30,17 @@ export function ProjectCard({ project }: { project: Project }) {
         ))}
       </ul>
 
-      {(project.repo || project.demo) && (
+      {(project.caseStudy || project.repo || project.demo) && (
         <div className="mt-5 flex items-center gap-4 border-t border-[rgb(var(--border)/0.1)] pt-4 text-sm">
+          {project.caseStudy && (
+            <Link
+              href={project.caseStudy}
+              className="inline-flex items-center gap-1.5 font-medium transition hover:text-[rgb(var(--ring))]"
+            >
+              Case study
+              <ArrowUpRightIcon width={14} height={14} />
+            </Link>
+          )}
           {project.repo && (
             <Link
               href={project.repo}

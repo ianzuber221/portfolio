@@ -13,5 +13,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.8,
     },
+    {
+      url: `${siteUrl}/work/supernova`,
+      lastModified: now,
+      changeFrequency: "yearly",
+      priority: 0.7,
+    },
   ];
 }

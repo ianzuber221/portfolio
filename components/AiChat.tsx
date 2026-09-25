@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRecruiter } from "@/context/RecruiterContext";
 import { profile } from "@/lib/profile";
+import { ChatMarkdown } from "@/components/ChatMarkdown";
+import { MAX_JD_CHARS } from "@/lib/chat-guard";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -10,14 +12,34 @@ const SUGGESTIONS = [
   "Why should we hire Ian?",
   "Tell me about the Bayer PassLink project.",
   "What's his experience with AI?",
-  "Is he open to relocating?",
+  "Walk me through the Supernova case study.",
 ];
+
+const FOLLOW_UPS = [
+  "What did he actually do on PassLink?",
+  "Walk me through the Supernova case study.",
+  "What's the best way to get in touch?",
+];
+
+const FIT_PROMPT = "How does Ian fit this role?";
 
 export function AiChat() {
   const { company, focus, hydrated, update } = useRecruiter();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
+  const [jd, setJd] = useState("");
   const [streaming, setStreaming] = useState(false);
+  const hasJd = Boolean(jd.trim());
+  const starterPrompts = useMemo(
+    () => (hasJd ? [FIT_PROMPT, ...SUGGESTIONS] : SUGGESTIONS),
+    [hasJd],
+  );
+  const followUps = useMemo(() => {
+    const lastUser = [...messages].reverse().find((m) => m.role === "user")
+      ?.content;
+    const extras = hasJd ? [FIT_PROMPT, ...FOLLOW_UPS] : FOLLOW_UPS;
+    return extras.filter((item) => item !== lastUser);
+  }, [hasJd, messages]);
   const threadRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,11 +49,11 @@ export function AiChat() {
     });
   }, [messages, streaming]);
 
-  async function send(text: string) {
+  async function send(text: string, history: Message[] = messages) {
     const content = text.trim();
     if (!content || streaming) return;
 
-    const nextMessages: Message[] = [...messages, { role: "user", content }];
+    const nextMessages: Message[] = [...history, { role: "user", content }];
     setMessages(nextMessages);
     setInput("");
     setStreaming(true);
@@ -44,7 +66,7 @@ export function AiChat() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: nextMessages,
-          context: { company, focus },
+          context: { company, focus, jd: jd.trim() },
         }),
       });
       if (!res.ok || !res.body) {
@@ -82,6 +104,13 @@ export function AiChat() {
   }
 
   const showEmptyState = messages.length === 0;
+  const lastUser = [...messages].reverse().find((m) => m.role === "user")?.content;
+  const lastIsError =
+    !streaming &&
+    messages[messages.length - 1]?.role === "assistant" &&
+    /something went wrong|a little fast/i.test(
+      messages[messages.length - 1]?.content || "",
+    );
 
   return (
     <section id="ai" className="container-page py-8">
@@ -93,10 +122,9 @@ export function AiChat() {
         <p className="eyebrow">For recruiters</p>
         <h2 className="section-title mt-2">Chat with my AI</h2>
         <p className="mt-3 max-w-2xl muted">
-          Ask anything about {profile.name.split(" ")[0]}&apos;s experience,
-          projects, or fit for your role. Add your company and focus for a
-          tailored conversation. Powered by OpenAI, with a curated fallback when
-          no key is configured.
+          Ask about {profile.name.split(" ")[0]}&apos;s BNY work, PassLink,
+          or the Supernova scale story. Paste a job description and the
+          assistant will write a fit memo with links to proof.
         </p>
 
         {/* Optional recruiter context */}
@@ -116,6 +144,20 @@ export function AiChat() {
             className="rounded-lg border border-[rgb(var(--border)/0.18)] bg-[rgb(var(--background))]/40 px-3.5 py-2.5 text-base sm:text-sm outline-none transition focus:border-[rgb(var(--ring)/0.6)]"
           />
         </div>
+        <textarea
+          aria-label="Job description"
+          value={jd}
+          onChange={(e) => setJd(e.target.value.slice(0, MAX_JD_CHARS))}
+          placeholder="Paste a job description (optional)"
+          rows={3}
+          className="mt-3 w-full resize-y rounded-lg border border-[rgb(var(--border)/0.18)] bg-[rgb(var(--background))]/40 px-3.5 py-2.5 text-base sm:text-sm outline-none transition focus:border-[rgb(var(--ring)/0.6)]"
+        />
+        {hasJd && (
+          <p className="mt-1.5 text-xs muted">
+            {jd.trim().length.toLocaleString()} / {MAX_JD_CHARS.toLocaleString()}{" "}
+            characters
+          </p>
+        )}
 
         {/* Thread */}
         <div
@@ -127,7 +169,7 @@ export function AiChat() {
             <div className="flex h-full flex-col items-center justify-center text-center">
               <p className="text-sm muted">Try asking:</p>
               <div className="mt-3 flex flex-wrap justify-center gap-2">
-                {SUGGESTIONS.map((s) => (
+                {starterPrompts.map((s) => (
                   <button
                     key={s}
                     type="button"
@@ -161,17 +203,45 @@ export function AiChat() {
                       : "bg-brand-600 text-white"
                   }`}
                 >
-                  {m.content ||
-                    (streaming && i === messages.length - 1 ? (
-                      <span className="inline-flex gap-1">
-                        <Dot /> <Dot delay="150ms" /> <Dot delay="300ms" />
-                      </span>
+                  {m.content ? (
+                    m.role === "assistant" ? (
+                      <ChatMarkdown text={m.content} />
                     ) : (
-                      ""
-                    ))}
+                      m.content
+                    )
+                  ) : streaming && i === messages.length - 1 ? (
+                    <span className="inline-flex gap-1">
+                      <Dot /> <Dot delay="150ms" /> <Dot delay="300ms" />
+                    </span>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
             ))
+          )}
+          {!showEmptyState && !streaming && !lastIsError && (
+            <div className="flex flex-wrap gap-2 pt-1">
+              {followUps.map((item) => (
+                <button
+                  key={item}
+                  type="button"
+                  onClick={() => send(item)}
+                  className="chip transition hover:border-[rgb(var(--ring)/0.5)] hover:text-[rgb(var(--ring))]"
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          )}
+          {lastIsError && lastUser && (
+            <button
+              type="button"
+              onClick={() => send(lastUser, messages.slice(0, -2))}
+              className="text-xs font-medium text-[rgb(var(--ring))] underline-offset-2 hover:underline"
+            >
+              Try again
+            </button>
           )}
         </div>
 

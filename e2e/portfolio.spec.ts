@@ -31,6 +31,7 @@ test.describe("routes", () => {
       ["/robots.txt", 200],
       ["/icon.svg", 200],
       ["/api/health", 200],
+      ["/work/supernova", 200],
     ];
     for (const [path, status] of checks) {
       const res = await request.get(path);
@@ -45,9 +46,9 @@ test.describe("routes", () => {
   test("sitemap uses the live production host", async ({ request }) => {
     const res = await request.get("/sitemap.xml");
     expect(res.status()).toBe(200);
-    expect(await res.text()).toContain(
-      "portfolio-ianzuber221s-projects.vercel.app",
-    );
+    const xml = await res.text();
+    expect(xml).toContain("portfolio-ianzuber221s-projects.vercel.app");
+    expect(xml).toContain("/work/supernova");
   });
 
   test("opengraph image is a PNG", async ({ request }) => {
@@ -71,6 +72,41 @@ test.describe("routes", () => {
     const text = await res.text();
     expect(text.length).toBeGreaterThan(40);
     expect(text).toMatch(/BNY|Angular|agent|MCP/i);
+  });
+
+  test("chat fallback answers project questions instead of a generic blurb", async ({
+    request,
+  }) => {
+    const res = await request.post("/api/chat", {
+      data: {
+        messages: [
+          { role: "user", content: "Tell me about the Supernova reviews service" },
+        ],
+      },
+    });
+    expect(res.status()).toBe(200);
+    const text = await res.text();
+    expect(text).toMatch(/1,000/);
+    expect(text).toMatch(/20ms|NGINX/i);
+  });
+
+  test("chat fallback writes a fit memo from a pasted JD", async ({
+    request,
+  }) => {
+    const res = await request.post("/api/chat", {
+      data: {
+        messages: [{ role: "user", content: "How does Ian fit this role?" }],
+        context: {
+          company: "Vercel",
+          jd: "Angular and TypeScript engineer to build MCP servers. Kubernetes is a plus.",
+        },
+      },
+    });
+    expect(res.status()).toBe(200);
+    const text = await res.text();
+    expect(text).toMatch(/Angular/i);
+    expect(text).toMatch(/MCP/i);
+    expect(text).toMatch(/\/work\/supernova/);
   });
 });
 
@@ -165,6 +201,27 @@ test.describe("chat", () => {
     );
     expect(marker).toBe("stay");
   });
+
+  test("pasted JD produces a fit memo with a case-study link", async ({
+    page,
+  }) => {
+    await page.setViewportSize(VIEWPORTS.laptop);
+    await page.goto("/#ai");
+    await page.getByLabel("Job description").fill(
+      "We need an Angular and TypeScript engineer who builds MCP servers. Kubernetes is a plus.",
+    );
+    await page.getByRole("button", { name: "How does Ian fit this role?" }).click();
+    await expect(page.locator("#ai [aria-live]")).toContainText(/Angular|MCP/i, {
+      timeout: 10_000,
+    });
+    const caseStudy = page
+      .locator("#ai")
+      .getByRole("link", { name: /Supernova/i });
+    await expect(caseStudy).toBeVisible();
+    await expect(caseStudy).toHaveAttribute("href", "/work/supernova");
+    await caseStudy.click();
+    await expect(page).toHaveURL(/\/work\/supernova/);
+  });
 });
 
 test.describe("mobile", () => {
@@ -249,6 +306,44 @@ test.describe("work", () => {
     expect(names[0]).toMatch(/PassLink/i);
     expect(names[1]).toMatch(/Portfolio/i);
     expect(names[2]).toMatch(/Supernova/i);
+  });
+
+  test("opens the Supernova case study", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("link", { name: "Case study" }).click();
+    await expect(page).toHaveURL(/\/work\/supernova/);
+    await expect(
+      page.getByRole("heading", { name: /Supernova Reviews Service/i }),
+    ).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Problem" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Approach" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Impact" })).toBeVisible();
+    await expect(page.getByText(/1,000 requests per second/i)).toBeVisible();
+    await expect(page.getByText(/landed under 20ms/i)).toBeVisible();
+    await page.getByRole("link", { name: "Work", exact: true }).click();
+    await expect(page).toHaveURL(/\/#work/);
+  });
+});
+
+test.describe("recruiter context", () => {
+  test("company and focus change the hero and persist", async ({ page }) => {
+    await page.setViewportSize(VIEWPORTS.desktop);
+    await page.goto("/");
+    await expect(page.getByText("Personalize this page")).toBeVisible();
+    await page.getByRole("button", { name: "Personalize for Vercel" }).click();
+    await expect(page.getByText(/Fits Vercel/)).toBeVisible();
+    await expect(page.getByText(/Why should we hire Ian for Vercel/)).toBeVisible();
+    await expect(
+      page.locator("#skills li").filter({ hasText: /^AI agents$/ }),
+    ).toHaveAttribute("data-highlighted", "true");
+    await expect(
+      page.locator("#skills li").filter({ hasText: /^Tailwind CSS$/ }),
+    ).not.toHaveAttribute("data-highlighted");
+
+    await page.reload();
+    await expect(page.getByText(/Fits Vercel/)).toBeVisible();
+    await expect(page.getByLabel("Your company")).toHaveValue("Vercel");
+    await expect(page.getByLabel("Role focus")).toHaveValue("AI infrastructure");
   });
 });
 

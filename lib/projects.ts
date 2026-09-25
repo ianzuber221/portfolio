@@ -7,6 +7,7 @@ export type Project = {
   repo?: string;
   demo?: string;
   featured?: boolean;
+  caseStudy?: string;
 };
 
 // Hand-written details (sourced from Ian's real project write-ups) keyed by the
@@ -47,8 +48,8 @@ export const projectOverrides: Record<
   supernova: {
     name: "Supernova Reviews Service",
     summary:
-      "Backend for a reviews service scaled to 1,500 req/s at sub-50ms on load-balanced AWS EC2 instances behind NGINX.",
-    impact: "1,500 req/s at <50ms",
+      "Backend for a reviews service scaled to 1,000 req/s at sub-20ms on load-balanced AWS EC2 instances behind NGINX.",
+    impact: "1,000 req/s at <20ms",
     tags: ["Node.js", "Express", "PostgreSQL", "AWS"],
   },
 };
@@ -86,10 +87,11 @@ export const projects: Project[] = [
     slug: "supernova",
     name: "Supernova Reviews Service",
     summary:
-      "Backend for a reviews service scaled to 1,500 req/s at sub-50ms on load-balanced AWS EC2 instances behind NGINX.",
-    impact: "1,500 req/s at <50ms",
+      "Backend for a reviews service scaled to 1,000 req/s at sub-20ms on load-balanced AWS EC2 instances behind NGINX.",
+    impact: "1,000 req/s at <20ms",
     tags: ["Node.js", "Express", "PostgreSQL", "AWS"],
     featured: true,
+    caseStudy: "/work/supernova",
   },
   {
     slug: "arcade",

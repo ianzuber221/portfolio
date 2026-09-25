@@ -31,6 +31,22 @@ describe("mergePortfolioProjects", () => {
     expect(merged.slice(0, 3).every((p) => p.featured)).toBe(true);
   });
 
+  it("keeps the Supernova case study link when GitHub returns a thin repo", () => {
+    const live = [
+      project({
+        slug: "supernova",
+        name: "thin github name",
+        repo: "https://github.com/ianzuber221/supernova",
+      }),
+    ];
+    const merged = mergePortfolioProjects(live);
+    const supernova = merged.find((p) => p.slug === "supernova");
+    expect(supernova?.caseStudy).toBe("/work/supernova");
+    expect(supernova?.repo).toBe("https://github.com/ianzuber221/supernova");
+    expect(supernova?.impact).toMatch(/1,000/);
+    expect(supernova?.name).toMatch(/Supernova/);
+  });
+
   it("fills remaining slots from GitHub without duplicating pinned slugs", () => {
     const live = [
       project({ slug: "arcade", name: "Arcade" }),
