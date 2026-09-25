@@ -35,7 +35,7 @@ export function toProject(repo: GitHubRepo): Project {
     summary:
       override?.summary ??
       repo.description?.trim() ??
-      "A project from my GitHub — click through for details.",
+      "A project from my GitHub. Click through for details.",
     impact:
       override?.impact ??
       (repo.stargazers_count > 0

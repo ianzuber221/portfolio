@@ -93,8 +93,8 @@ export function AiChat() {
         copy[copy.length - 1] = {
           role: "assistant",
           content: rateLimited
-            ? "You're sending messages a little fast — wait a few seconds and try again."
-            : "Sorry — something went wrong. Please try again.",
+            ? "You're sending messages a little fast. Wait a few seconds and try again."
+            : "Sorry, something went wrong. Please try again.",
         };
         return copy;
       });

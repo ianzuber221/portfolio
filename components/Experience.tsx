@@ -7,7 +7,7 @@ export function Experience() {
     <section id="experience" className="container-page py-16 sm:py-20">
       <SectionHeading
         eyebrow="Experience"
-        title="Where I've been building"
+        title="Recent roles"
       />
       <ol className="mt-10 space-y-8 border-l border-[rgb(var(--border)/0.14)] pl-6">
         {experience.map((item, i) => (

@@ -20,14 +20,14 @@ export const projectOverrides: Record<
   portfolio: {
     name: "AI-Powered Portfolio",
     summary:
-      "This site — a Next.js portfolio with an OpenAI assistant that answers recruiter questions, plus projects pulled live from GitHub.",
+      "This site: a Next.js portfolio with an OpenAI assistant for recruiter questions, plus projects pulled live from GitHub.",
     impact: "Interactive AI assistant",
     tags: ["Next.js", "TypeScript", "Tailwind", "OpenAI"],
   },
   arcade: {
     name: "Arcade",
     summary:
-      "A browser arcade hosting a Chrome-style dinosaur game with authentication and per-user high scores — built solo in a 48-hour constraint.",
+      "A browser arcade with a Chrome-style dinosaur game, auth, and per-user high scores. Built solo in 48 hours.",
     impact: "Built in 48 hours",
     tags: ["React", "Express", "Firebase", "JavaScript"],
   },
@@ -68,7 +68,7 @@ export const projects: Project[] = [
     slug: "passlink",
     name: "Bayer PassLink Cloud Web App",
     summary:
-      "Led development of a cloud web app for medical-device software — architecture, delivery, and mentoring offshore developers across complex internal systems.",
+      "Led a cloud web app for medical-device software: architecture, delivery, and mentoring offshore developers.",
     impact: "Led architecture & delivery",
     tags: ["Angular", "Nest.js", "AWS Lambda", "TypeScript"],
     featured: true,
@@ -77,7 +77,7 @@ export const projects: Project[] = [
     slug: "portfolio",
     name: "AI-Powered Portfolio",
     summary:
-      "This site — a Next.js portfolio with an OpenAI assistant that answers recruiter questions, plus projects pulled live from GitHub.",
+      "This site: a Next.js portfolio with an OpenAI assistant for recruiter questions, plus projects pulled live from GitHub.",
     impact: "Interactive AI assistant",
     tags: ["Next.js", "TypeScript", "Tailwind", "OpenAI"],
     repo: "https://github.com/ianzuber221/portfolio",
@@ -97,7 +97,7 @@ export const projects: Project[] = [
     slug: "arcade",
     name: "Arcade",
     summary:
-      "A browser arcade hosting a Chrome-style dinosaur game with authentication and per-user high scores — built solo in a 48-hour constraint.",
+      "A browser arcade with a Chrome-style dinosaur game, auth, and per-user high scores. Built solo in 48 hours.",
     impact: "Built in 48 hours",
     tags: ["React", "Express", "Firebase"],
   },

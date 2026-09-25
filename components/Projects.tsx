@@ -14,7 +14,7 @@ export async function Projects() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <SectionHeading
           eyebrow="Selected work"
-          title="Things I've designed and shipped"
+          title="Selected projects"
           description="Production work first, then selected GitHub projects."
         />
         {isLive && (

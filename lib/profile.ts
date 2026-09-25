@@ -49,14 +49,14 @@ export const profile: Profile = {
   initials: "IZ",
   role: "AI Frontend Engineer",
   tagline:
-    "AI Frontend Engineer at BNY building enterprise Angular web apps — and the agents, skills, workflows, and MCP servers that power them.",
+    "AI Frontend Engineer at BNY. I build enterprise Angular apps and the agents, skills, workflows, and MCP servers behind them.",
   location: "Pittsburgh, PA",
   availability: "Open to new opportunities",
   githubUsername: "ianzuber221",
   calendly: "https://calendly.com/ianzuber",
   about: [
-    "I'm an AI Frontend Engineer at BNY, building enterprise Angular web applications on the Platform Tools team and weaving AI into the experience — designing agents, reusable skills, multi-step workflows, and MCP servers that connect internal systems and data to LLMs.",
-    "Before BNY I spent ~2.5 years at Bayer in Pittsburgh, where I led development of the PassLink Cloud Web App for medical-device software — driving architecture, integrating complex internal systems, and mentoring offshore developers. I studied Music Technology at Duquesne University, took web development coursework at CCAC, and completed Hack Reactor's advanced software engineering program.",
+    "I'm an AI Frontend Engineer at BNY on the Platform Tools team. I build enterprise Angular apps and the agents, reusable skills, multi-step workflows, and MCP servers that connect internal systems to LLMs.",
+    "Before BNY I spent about 2.5 years at Bayer in Pittsburgh leading the PassLink Cloud Web App for medical-device software: architecture, internal integrations, and mentoring offshore developers. I studied Music Technology at Duquesne, took web development at CCAC, and finished Hack Reactor's advanced software engineering program.",
   ],
   stats: [
     { label: "Experience", value: "3+ yrs" },
@@ -140,9 +140,9 @@ export const experience: Experience[] = [
     role: "AI Frontend Engineer",
     period: "Present",
     summary:
-      "Build enterprise Angular web applications on the Platform Tools team and weave AI into the experience.",
+      "Build enterprise Angular apps on the Platform Tools team, plus the AI agents and MCP servers around them.",
     highlights: [
-      "Develop enterprise-scale Angular front-end experiences integrated with AI capabilities.",
+      "Build Angular front-ends with AI features in the product.",
       "Design AI agents, reusable skills, and multi-step workflows for internal tooling.",
       "Build MCP (Model Context Protocol) servers that connect internal systems and data to LLMs.",
     ],
@@ -153,11 +153,11 @@ export const experience: Experience[] = [
     role: "Full-Stack Software Engineer",
     period: "~2.5 yrs",
     summary:
-      "Led development of Bayer's PassLink Cloud Web App, pioneering medical-device software solutions.",
+      "Led Bayer's PassLink Cloud Web App for medical-device software.",
     highlights: [
-      "Drove architectural design for a cloud web app spanning complex internal systems.",
+      "Drove architecture for a cloud web app that tied together a lot of internal systems.",
       "Mentored offshore developers and coordinated delivery across time zones.",
-      "Integrated the app with intricate internal services and data sources.",
+      "Integrated the app with internal services and data sources.",
     ],
     stack: ["Angular", "Nest.js", "Node.js", "AWS Lambda", "TypeScript", "PostgreSQL"],
   },

@@ -59,7 +59,7 @@ export function formatFitMemo(
   const company = context.company?.trim();
   const where = company ? ` at ${company}` : "";
   const matchLine = fit.matches.length
-    ? `the JD calls for ${fit.matches.slice(0, 4).join(", ")} — that's Ian's BNY / Bayer work`
+    ? `the JD calls for ${fit.matches.slice(0, 4).join(", ")}. That's Ian's BNY / Bayer work`
     : "Ian is an AI Frontend Engineer (Angular, agents, MCP) with PassLink leadership behind him";
   const verdictLabel =
     fit.verdict === "strong"

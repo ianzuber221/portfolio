@@ -12,10 +12,10 @@ export function RecruiterPreview() {
     ? `Why should we hire Ian for ${companyName}?`
     : "Why should we hire Ian?";
   const reply = companyName
-    ? `He's an AI Frontend Engineer at BNY — Angular apps plus agents, skills, workflows & MCP servers${
-        focusName ? `, with a sharp fit for ${focusName}` : ""
-      }. Previously he led Bayer's PassLink Cloud Web App.`
-    : "He's an AI Frontend Engineer at BNY — Angular apps plus AI agents, skills, workflows & MCP servers. He previously led Bayer's PassLink Cloud Web App.";
+    ? `He's an AI Frontend Engineer at BNY. He builds Angular apps plus agents, skills, workflows, and MCP servers${
+        focusName ? `, which maps well to ${focusName}` : ""
+      }. He previously led Bayer's PassLink Cloud Web App.`
+    : "He's an AI Frontend Engineer at BNY. He builds Angular apps plus AI agents, skills, workflows, and MCP servers. He previously led Bayer's PassLink Cloud Web App.";
 
   return (
     <div className="card p-6">

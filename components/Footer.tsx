@@ -21,11 +21,11 @@ export function Footer() {
         />
         <p className="eyebrow">Contact</p>
         <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-4xl">
-          Let&apos;s build something great.
+          Get in touch.
         </h2>
         <p className="mt-3 max-w-xl muted">
           Recruiter, engineer, or just curious how this site works? I&apos;m
-          always happy to talk about product, AI, and thoughtful engineering.
+          always happy to talk about product, AI, and how this site was built.
         </p>
 
         <div className="mt-8 flex flex-wrap items-center gap-3">

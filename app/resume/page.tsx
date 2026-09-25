@@ -6,7 +6,7 @@ import { PrintButton } from "@/components/PrintButton";
 
 export const metadata: Metadata = {
   title: "Résumé",
-  description: `${profile.name} — ${profile.role}. Résumé and experience.`,
+  description: `${profile.name} · ${profile.role}. Résumé and experience.`,
 };
 
 export default function ResumePage() {

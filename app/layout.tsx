@@ -12,7 +12,7 @@ const siteUrl = getSiteUrl();
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: `${profile.name} — ${profile.role}`,
+    default: `${profile.name} · ${profile.role}`,
     template: `%s · ${profile.name}`,
   },
   description: profile.tagline,
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   authors: [{ name: profile.name }],
   creator: profile.name,
   openGraph: {
-    title: `${profile.name} — ${profile.role}`,
+    title: `${profile.name} · ${profile.role}`,
     description: profile.tagline,
     url: siteUrl,
     siteName: `${profile.name} · Portfolio`,
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${profile.name} — ${profile.role}`,
+    title: `${profile.name} · ${profile.role}`,
     description: profile.tagline,
   },
   robots: { index: true, follow: true },
