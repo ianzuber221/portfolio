@@ -31,7 +31,7 @@ export function Navbar() {
     <header
       className={`sticky top-0 z-50 transition-colors ${
         scrolled
-          ? "border-b border-[rgb(var(--border)/0.1)] bg-[rgb(var(--background))]/80 backdrop-blur"
+          ? "border-b border-[rgb(var(--border)/0.1)] bg-[rgb(var(--background))] sm:bg-[rgb(var(--background))]/80 sm:backdrop-blur"
           : "border-b border-transparent"
       }`}
     >
@@ -80,7 +80,7 @@ export function Navbar() {
       </nav>
 
       {open && (
-        <div className="border-t border-[rgb(var(--border)/0.1)] bg-[rgb(var(--background))]/95 backdrop-blur sm:hidden">
+        <div className="border-t border-[rgb(var(--border)/0.1)] bg-[rgb(var(--background))] sm:hidden">
           <ul className="container-page flex flex-col py-2">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>

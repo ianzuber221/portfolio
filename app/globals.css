@@ -40,7 +40,20 @@
     background-image:
       radial-gradient(48rem 48rem at 15% -10%, rgb(var(--ring) / 0.12), transparent 60%),
       radial-gradient(42rem 42rem at 110% 5%, rgb(var(--ring) / 0.1), transparent 55%);
-    background-attachment: fixed;
+    /* iOS Safari paints a black viewport when this is `fixed`. */
+    background-attachment: scroll;
+  }
+
+  @media (min-width: 640px) {
+    body {
+      background-attachment: fixed;
+    }
+  }
+
+  @supports (-webkit-touch-callout: none) {
+    body {
+      background-attachment: scroll;
+    }
   }
 
   ::selection {
@@ -106,7 +119,13 @@
     transition:
       opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
       transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-    will-change: opacity, transform;
+  }
+
+  @media (max-width: 639px) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+    }
   }
 
   .reveal.is-visible {
