@@ -4,7 +4,7 @@ import Link from "next/link";
 export function MobileActionBar() {
   return (
     <div
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-[rgb(var(--border)/0.12)] bg-[rgb(var(--background))] sm:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[var(--background-solid)] sm:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       <div className="flex gap-3 px-4 py-3">

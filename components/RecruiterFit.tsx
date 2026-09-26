@@ -16,7 +16,7 @@ export function RecruiterFit() {
     .join(" · ");
 
   return (
-    <div className="mt-5 animate-fade-in-up">
+    <div className="mt-5 sm:animate-fade-in-up">
       <p
         className={`min-h-[1.5rem] text-sm ${
           active ? "font-medium text-[rgb(var(--ring))]" : "muted"

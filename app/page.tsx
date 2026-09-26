@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { Skills } from "@/components/Skills";
@@ -14,12 +15,14 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      <main id="main">
+      <main id="main" className="pb-20 sm:pb-0">
         <Hero />
         <Reveal>
           <Skills />
         </Reveal>
-        <Projects />
+        <Suspense fallback={<section id="work" className="container-page py-16 sm:py-20" />}>
+          <Projects />
+        </Suspense>
         <Experience />
         <Education />
         <About />

@@ -19,7 +19,7 @@ export function Hero() {
       <div className="container-page grid items-center gap-12 pb-16 pt-16 sm:pb-20 sm:pt-24 lg:grid-cols-[1.05fr_0.95fr]">
         {/* Left: intro */}
         <div>
-          <span className="inline-flex animate-fade-in-up items-center gap-2 rounded-full border border-[rgb(var(--border)/0.18)] bg-[rgb(var(--surface))]/50 px-3 py-1 text-xs font-medium">
+          <span className="inline-flex sm:animate-fade-in-up items-center gap-2 rounded-full border border-[rgb(var(--border)/0.18)] bg-[rgb(var(--surface))]/50 px-3 py-1 text-xs font-medium">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
@@ -27,20 +27,20 @@ export function Hero() {
             {profile.availability} · {profile.location}
           </span>
 
-          <h1 className="mt-6 animate-fade-in-up text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl">
+          <h1 className="mt-6 sm:animate-fade-in-up text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl">
             Hi, I&apos;m {profile.name}.
             <span className="mt-1 block text-gradient bg-[length:200%_auto] animate-gradient-pan">
               {profile.role}.
             </span>
           </h1>
 
-          <p className="mt-6 max-w-xl animate-fade-in-up text-lg leading-relaxed muted">
+          <p className="mt-6 max-w-xl sm:animate-fade-in-up text-lg leading-relaxed muted">
             {profile.tagline}
           </p>
 
           <RecruiterFit />
 
-          <div className="mt-8 flex animate-fade-in-up flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+          <div className="mt-8 flex sm:animate-fade-in-up flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
             <Link href="#ai" className="btn-primary w-full sm:w-auto">
               Chat with my AI
               <ArrowUpRightIcon width={16} height={16} />
@@ -71,7 +71,7 @@ export function Hero() {
             </div>
           </div>
 
-          <dl className="mt-12 grid max-w-lg animate-fade-in-up grid-cols-3 gap-4 border-t border-[rgb(var(--border)/0.1)] pt-6">
+          <dl className="mt-12 grid max-w-lg sm:animate-fade-in-up grid-cols-3 gap-4 border-t border-[rgb(var(--border)/0.1)] pt-6">
             {profile.stats.map((stat) => (
               <div key={stat.label}>
                 <dt className="text-xs muted">{stat.label}</dt>

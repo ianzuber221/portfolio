@@ -44,7 +44,14 @@ export function RecruiterProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!hydrated) return;
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ company, focus }));
+    try {
+      window.localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({ company, focus }),
+      );
+    } catch {
+      // Private mode and some in-app browsers throw here.
+    }
   }, [company, focus, hydrated]);
 
   const update = useCallback(
@@ -58,7 +65,11 @@ export function RecruiterProvider({ children }: { children: React.ReactNode }) {
   const reset = useCallback(() => {
     setCompany("");
     setFocus("");
-    window.localStorage.removeItem(STORAGE_KEY);
+    try {
+      window.localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      // ignore
+    }
   }, []);
 
   const value = useMemo(

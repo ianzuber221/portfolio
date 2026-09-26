@@ -90,7 +90,11 @@ export async function fetchGitHubProjects(
   try {
     const res = await fetch(
       `https://api.github.com/users/${profile.githubUsername}/repos?per_page=100&sort=updated`,
-      { headers, next: { revalidate: 3600 } },
+      {
+        headers,
+        next: { revalidate: 3600 },
+        signal: AbortSignal.timeout(2500),
+      },
     );
     if (!res.ok) return null;
 

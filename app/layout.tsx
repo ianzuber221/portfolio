@@ -55,6 +55,11 @@ export const viewport: Viewport = {
 // Applies the persisted (or system) theme before first paint to avoid a flash.
 const themeInitScript = `(function(){try{var t=localStorage.getItem('portfolio-theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.classList.toggle('dark',d);}catch(e){document.documentElement.classList.add('dark');}})();`;
 
+// Hex colors so the page stays readable if Tailwind's rgb(var(--x)) utilities
+// are invalid in an in-app WebView, and during the first paint on mobile.
+const criticalColorCss =
+  "html,body{background-color:#fff;color:#0f172a}html.dark,html.dark body{background-color:#040712;color:#e2e8f0}";
+
 // schema.org Person structured data for richer search results.
 const personJsonLd = {
   "@context": "https://schema.org",
@@ -93,6 +98,7 @@ export default function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <style dangerouslySetInnerHTML={{ __html: criticalColorCss }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
